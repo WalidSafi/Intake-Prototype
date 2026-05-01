@@ -1,0 +1,41 @@
+[
+  {
+    "id": "artist_001",
+    "name": "Nilab Tattoos",
+    "role": "artist",
+    "email": "artist@studio.test",
+    "password": "prototype-admin",
+    "socials": {
+      "instagram": "https://www.instagram.com/nilabtattoos/",
+      "tiktok": "",
+      "facebook": "",
+      "bluesky":"",
+      "website":""
+    },
+    "permissions": ["adminPanel", "viewRequests", "manageRequests"]
+  },
+  {
+    "id": "staff_001",
+    "name": "Front Desk",
+    "role": "studio",
+    "email": "frontdesk@example.com",
+    "password": "prototype-desk",
+    "permissions": ["viewRequests"]
+  },
+  {
+    "id": "client_001",
+    "name": "Maya Chen",
+    "role": "client",
+    "email": "client.maya@example.com",
+    "password": "prototype-client",
+    "permissions": ["submitRequest"]
+  },
+  {
+    "id": "client_002",
+    "name": "Jordan Rivera",
+    "role": "client",
+    "email": "client.jordan@example.com",
+    "password": "prototype-client",
+    "permissions": ["submitRequest"]
+  }
+]
