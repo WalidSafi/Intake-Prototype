@@ -346,7 +346,9 @@ export default function AdminDashboard() {
                 artist?.name
             }
             </p>
-            <a className="m-0 text-lg font-bold tracking-[0.12em] text-[#b95f43] uppercase" href={artist?.socials.instagram}>
+            { artist?.socials?.instagram && (
+              <a className="m-0 text-lg font-bold tracking-[0.12em] text-[#b95f43] uppercase" href={artist.socials.instagram}>
+              
               <svg 
                   xmlns="http://w3.org" 
                   width="24" 
@@ -363,6 +365,7 @@ export default function AdminDashboard() {
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
             </a>
+            )}
             <h1 className="m-0 text-3xl leading-tight font-bold">
               Inbox
             </h1>
