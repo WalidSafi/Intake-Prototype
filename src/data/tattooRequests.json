@@ -1,0 +1,730 @@
+[
+  {
+    "id": "req_2026_0001",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Maya",
+      "lastName": "Chen",
+      "email": "maya.chen@example.test",
+      "phone": "+1 416-555-0134"
+    },
+    "tattoo": {
+      "description": "Fine line botanical piece with a small moth and wildflowers. Soft, delicate linework with light shading.",
+      "size": {
+        "width": 4.5,
+        "height": 7,
+        "unit": "in"
+      },
+      "placement": "Forearm",
+      "placementNotes": "Inner left forearm, vertical orientation. Open to slight resizing for flow.",
+      "colorMode": "Black and grey",
+      "style": "Fineline",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0001",
+          "label": "moth and wildflower reference",
+          "url": "/prototype-uploads/maya-moth-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0001",
+          "label": "left inner forearm placement",
+          "url": "/prototype-uploads/maya-left-forearm.jpg"
+        }
+      ]
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Weekday evenings after 5 PM, flexible in late May.",
+    "status": "new",
+    "submittedAt": "2026-04-30T18:42:00-04:00"
+  },
+  {
+    "id": "req_2026_0002",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Jordan",
+      "lastName": "Reyes",
+      "email": "jordan.reyes@example.test",
+      "phone": "+1 647-555-0188"
+    },
+    "tattoo": {
+      "description": "Bold blackwork snake wrapping around an existing dagger tattoo, with heavier contrast and ornamental details.",
+      "size": {
+        "width": 6,
+        "height": 10,
+        "unit": "in"
+      },
+      "placement": "Calf",
+      "placementNotes": "Right outer calf. Existing dagger is about 5 inches tall.",
+      "colorMode": "Blackwork",
+      "style": "Blackwork",
+      "isCoverup": "Not sure",
+      "coverupNotes": "Wants the old dagger incorporated if possible, but is open to partial coverup."
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0002",
+          "label": "snake blackwork inspiration",
+          "url": "/prototype-uploads/jordan-snake-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0002",
+          "label": "right calf existing tattoo",
+          "url": "/prototype-uploads/jordan-right-calf.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "Prefers Saturdays. Hoping to start before July.",
+    "status": "needs_review",
+    "submittedAt": "2026-04-29T11:16:00-04:00"
+  },
+  {
+    "id": "req_2026_0003",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Samira",
+      "lastName": "Patel",
+      "email": "samira.patel@example.test",
+      "phone": "+1 905-555-0172"
+    },
+    "tattoo": {
+      "description": "Color neo traditional peony with a small crescent moon and warm palette.",
+      "size": {
+        "width": 5,
+        "height": 5,
+        "unit": "in"
+      },
+      "placement": "Shoulder",
+      "placementNotes": "Top of right shoulder, should sit well with sleeveless tops.",
+      "colorMode": "Color",
+      "style": "Neo traditional",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0003",
+          "label": "peony color palette",
+          "url": "/prototype-uploads/samira-peony-palette.jpg"
+        },
+        {
+          "id": "photo_ref_0004",
+          "label": "crescent detail reference",
+          "url": "/prototype-uploads/samira-crescent-reference.jpg"
+        }
+      ],
+      "bodyPhotos": []
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Open on Mondays and Tuesdays. No hard deadline.",
+    "status": "quoted",
+    "submittedAt": "2026-04-27T14:05:00-04:00"
+  },
+  {
+    "id": "req_2026_0004",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Elliot",
+      "lastName": "Brooks",
+      "email": "elliot.brooks@example.test",
+      "phone": "+1 289-555-0199"
+    },
+    "tattoo": {
+      "description": "Minimal script tattoo using the phrase 'still here' in a handwritten style.",
+      "size": {
+        "width": 2.5,
+        "height": 0.75,
+        "unit": "in"
+      },
+      "placement": "Wrist",
+      "placementNotes": "Inside right wrist. Wants it readable but subtle.",
+      "colorMode": "Black and grey",
+      "style": "Script",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0003",
+          "label": "right wrist placement",
+          "url": "/prototype-uploads/elliot-right-wrist.jpg"
+        }
+      ]
+    },
+    "budget": "Under $250",
+    "availability": "Any weekday lunch hour or early evening.",
+    "status": "approved_for_booking",
+    "submittedAt": "2026-04-25T09:31:00-04:00"
+  },
+  {
+    "id": "req_2026_0005",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Avery",
+      "lastName": "Morgan",
+      "email": "avery.morgan@example.test",
+      "phone": "+1 416-555-0149"
+    },
+    "tattoo": {
+      "description": "Small black and grey memorial portrait of a senior dog with a simple halo of lavender sprigs.",
+      "size": {
+        "width": 3.5,
+        "height": 4,
+        "unit": "in"
+      },
+      "placement": "Upper arm",
+      "placementNotes": "Outer left upper arm, wants enough room for soft shading around the ears.",
+      "colorMode": "Black and grey",
+      "style": "Micro realism",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0005",
+          "label": "dog portrait reference",
+          "url": "/prototype-uploads/avery-dog-portrait.jpg"
+        },
+        {
+          "id": "photo_ref_0006",
+          "label": "lavender detail reference",
+          "url": "/prototype-uploads/avery-lavender-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0004",
+          "label": "left upper arm placement",
+          "url": "/prototype-uploads/avery-left-upper-arm.jpg"
+        }
+      ]
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Weekends or Fridays after 2 PM. Hoping for an appointment in June.",
+    "status": "new",
+    "submittedAt": "2026-05-01T08:12:00-04:00"
+  },
+  {
+    "id": "req_2026_0006",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Noah",
+      "lastName": "Kovacs",
+      "email": "noah.kovacs@example.test",
+      "phone": "+1 647-555-0161"
+    },
+    "tattoo": {
+      "description": "Geometric mountain range with a night sky gradient, thin line constellations, and one small red canoe.",
+      "size": {
+        "width": 7,
+        "height": 3,
+        "unit": "in"
+      },
+      "placement": "Rib",
+      "placementNotes": "Left ribs, horizontal piece following the natural curve under the chest.",
+      "colorMode": "Color",
+      "style": "Geometric",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0007",
+          "label": "mountain geometry reference",
+          "url": "/prototype-uploads/noah-mountain-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0005",
+          "label": "left rib placement",
+          "url": "/prototype-uploads/noah-left-ribs.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "Can take a full weekday off with two weeks notice. Avoiding the week of June 15.",
+    "status": "needs_review",
+    "submittedAt": "2026-04-30T21:08:00-04:00"
+  },
+  {
+    "id": "req_2026_0007",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Priya",
+      "lastName": "Nair",
+      "email": "priya.nair@example.test",
+      "phone": "+1 905-555-0115"
+    },
+    "tattoo": {
+      "description": "Delicate ornamental lotus mandala with dotwork shading and a few tiny star accents.",
+      "size": {
+        "width": 5.5,
+        "height": 5.5,
+        "unit": "in"
+      },
+      "placement": "Back",
+      "placementNotes": "Centered between shoulder blades, symmetrical and not extending too close to the neck.",
+      "colorMode": "Black and grey",
+      "style": "Ornamental dotwork",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0008",
+          "label": "lotus mandala inspiration",
+          "url": "/prototype-uploads/priya-lotus-mandala.jpg"
+        }
+      ],
+      "bodyPhotos": []
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Most Sunday afternoons and Tuesday mornings. Flexible on timing.",
+    "status": "quoted",
+    "submittedAt": "2026-04-30T16:47:00-04:00"
+  },
+  {
+    "id": "req_2026_0008",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Lucas",
+      "lastName": "Martinez",
+      "email": "lucas.martinez@example.test",
+      "phone": "+1 437-555-0190"
+    },
+    "tattoo": {
+      "description": "Traditional swallow pair with a banner reading 'homeward' and warm red and gold accents.",
+      "size": {
+        "width": 8,
+        "height": 6,
+        "unit": "in"
+      },
+      "placement": "Chest",
+      "placementNotes": "Across upper chest below collarbones, open to splitting into two mirrored birds.",
+      "colorMode": "Color",
+      "style": "American traditional",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0009",
+          "label": "swallow flash reference",
+          "url": "/prototype-uploads/lucas-swallow-flash.jpg"
+        },
+        {
+          "id": "photo_ref_0010",
+          "label": "banner lettering reference",
+          "url": "/prototype-uploads/lucas-banner-lettering.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0006",
+          "label": "upper chest placement",
+          "url": "/prototype-uploads/lucas-upper-chest.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "Saturdays are best. Can also do Thursday evenings after 6 PM.",
+    "status": "approved_for_booking",
+    "submittedAt": "2026-04-30T10:22:00-04:00"
+  },
+  {
+    "id": "req_2026_0009",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Hannah",
+      "lastName": "Okafor",
+      "email": "hannah.okafor@example.test",
+      "phone": "+1 416-555-0122"
+    },
+    "tattoo": {
+      "description": "Abstract brushstroke piece inspired by ocean foam, mostly black ink with one muted teal accent.",
+      "size": {
+        "width": 4,
+        "height": 9,
+        "unit": "in"
+      },
+      "placement": "Thigh",
+      "placementNotes": "Front right thigh, vertical flow that can be hidden by shorts.",
+      "colorMode": "Limited color",
+      "style": "Abstract",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0011",
+          "label": "ocean brushstroke moodboard",
+          "url": "/prototype-uploads/hannah-ocean-brushstroke.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0007",
+          "label": "right thigh placement",
+          "url": "/prototype-uploads/hannah-right-thigh.jpg"
+        }
+      ]
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Weekday mornings before noon. Wants to avoid late July travel dates.",
+    "status": "new",
+    "submittedAt": "2026-04-29T19:54:00-04:00"
+  },
+  {
+    "id": "req_2026_0010",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Ben",
+      "lastName": "Schneider",
+      "email": "ben.schneider@example.test",
+      "phone": "+1 289-555-0168"
+    },
+    "tattoo": {
+      "description": "Coverup for a faded tribal armband using dense blackwork leaves and negative space breaks.",
+      "size": {
+        "width": 9,
+        "height": 4,
+        "unit": "in"
+      },
+      "placement": "Bicep",
+      "placementNotes": "Wraps around right bicep. Existing tattoo is uneven and darker on the inner arm.",
+      "colorMode": "Blackwork",
+      "style": "Botanical blackwork",
+      "isCoverup": "Yes",
+      "coverupNotes": "Old tribal band is about 3 inches tall and fully wraps the arm. Client wants it no longer recognizable."
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0012",
+          "label": "black leaf coverup reference",
+          "url": "/prototype-uploads/ben-leaf-coverup-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0008",
+          "label": "right bicep existing band",
+          "url": "/prototype-uploads/ben-right-bicep-band.jpg"
+        },
+        {
+          "id": "photo_body_0009",
+          "label": "inner arm existing tattoo",
+          "url": "/prototype-uploads/ben-inner-arm-band.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "Can book multiple sessions. Prefers Mondays, Wednesdays, or early Saturdays.",
+    "status": "needs_review",
+    "submittedAt": "2026-04-28T13:39:00-04:00"
+  },
+  {
+    "id": "req_2026_0011",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Zoe",
+      "lastName": "Sinclair",
+      "email": "zoe.sinclair@example.test",
+      "phone": "+1 647-555-0137"
+    },
+    "tattoo": {
+      "description": "Tiny matching celestial symbols for two siblings, each with a moon, a small sun, and two dots.",
+      "size": {
+        "width": 1.25,
+        "height": 1.25,
+        "unit": "in"
+      },
+      "placement": "Ankle",
+      "placementNotes": "Inside left ankle for Zoe. Sibling may choose wrist placement during consult.",
+      "colorMode": "Black and grey",
+      "style": "Minimal",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0013",
+          "label": "minimal celestial reference",
+          "url": "/prototype-uploads/zoe-celestial-reference.jpg"
+        }
+      ],
+      "bodyPhotos": []
+    },
+    "budget": "Under $250",
+    "availability": "Both clients are free May 18, May 25, or any Friday after 4 PM.",
+    "status": "quoted",
+    "submittedAt": "2026-04-27T20:18:00-04:00"
+  },
+  {
+    "id": "req_2026_0012",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Marcus",
+      "lastName": "Lee",
+      "email": "marcus.lee@example.test",
+      "phone": "+1 416-555-0183"
+    },
+    "tattoo": {
+      "description": "Japanese-inspired koi fish moving through maple leaves with bold waves and orange scale details.",
+      "size": {
+        "width": 10,
+        "height": 14,
+        "unit": "in"
+      },
+      "placement": "Half sleeve",
+      "placementNotes": "Upper right arm from shoulder cap to above the elbow, should leave room to extend later.",
+      "colorMode": "Color",
+      "style": "Japanese inspired",
+      "isCoverup": "Not sure",
+      "coverupNotes": "There is a small faded star near the elbow that could be worked into the background or covered."
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0014",
+          "label": "koi and wave reference",
+          "url": "/prototype-uploads/marcus-koi-wave-reference.jpg"
+        },
+        {
+          "id": "photo_ref_0015",
+          "label": "maple leaf color reference",
+          "url": "/prototype-uploads/marcus-maple-leaf-color.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0010",
+          "label": "right upper arm placement",
+          "url": "/prototype-uploads/marcus-right-upper-arm.jpg"
+        }
+      ]
+    },
+    "budget": "$2,000+",
+    "availability": "Flexible for longer sessions. Prefers to start after June 10.",
+    "status": "approved_for_booking",
+    "submittedAt": "2026-04-26T15:06:00-04:00"
+  },
+  {
+    "id": "req_2026_0013",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Claire",
+      "lastName": "Bennett",
+      "email": "claire.bennett@example.test",
+      "phone": "+1 905-555-0141"
+    },
+    "tattoo": {
+      "description": "Vintage botanical field guide illustration of a foxglove stem with Latin label underneath.",
+      "size": {
+        "width": 3,
+        "height": 8,
+        "unit": "in"
+      },
+      "placement": "Shin",
+      "placementNotes": "Left shin, vertical composition with the label near the ankle.",
+      "colorMode": "Black and grey",
+      "style": "Illustrative",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0016",
+          "label": "foxglove field guide reference",
+          "url": "/prototype-uploads/claire-foxglove-field-guide.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0011",
+          "label": "left shin placement",
+          "url": "/prototype-uploads/claire-left-shin.jpg"
+        }
+      ]
+    },
+    "budget": "$500 - $1,000",
+    "availability": "Open the first two weeks of June, especially afternoons.",
+    "status": "needs_review",
+    "submittedAt": "2026-04-24T12:27:00-04:00"
+  },
+  {
+    "id": "req_2026_0014",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Owen",
+      "lastName": "Price",
+      "email": "owen.price@example.test",
+      "phone": "+1 437-555-0156"
+    },
+    "tattoo": {
+      "description": "Surreal black and grey hourglass with sand turning into small birds and a cracked frame.",
+      "size": {
+        "width": 6,
+        "height": 9,
+        "unit": "in"
+      },
+      "placement": "Forearm",
+      "placementNotes": "Outer right forearm, vertical orientation from wrist toward elbow.",
+      "colorMode": "Black and grey",
+      "style": "Surrealism",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0017",
+          "label": "hourglass concept sketch",
+          "url": "/prototype-uploads/owen-hourglass-concept.jpg"
+        },
+        {
+          "id": "photo_ref_0018",
+          "label": "surreal birds reference",
+          "url": "/prototype-uploads/owen-birds-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0012",
+          "label": "right outer forearm placement",
+          "url": "/prototype-uploads/owen-right-forearm.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "After 5 PM on weekdays or any time Sunday. Ready to book once design is approved.",
+    "status": "new",
+    "submittedAt": "2026-04-23T17:44:00-04:00"
+  },
+  {
+    "id": "req_2026_0015",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Riley",
+      "lastName": "Stone",
+      "email": "riley.stone@example.test",
+      "phone": "+1 416-555-0189"
+    },
+    "tattoo": {
+      "description": "Completed black and grey raven shoulder piece with soft smoke shading and small moon details.",
+      "size": {
+        "width": 7,
+        "height": 9,
+        "unit": "in"
+      },
+      "placement": "Shoulder",
+      "placementNotes": "Finished on the right shoulder cap with smoke extending slightly onto the upper arm.",
+      "colorMode": "Black and grey",
+      "style": "Illustrative realism",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0019",
+          "label": "original raven mood reference",
+          "url": "/prototype-uploads/riley-raven-reference.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0013",
+          "label": "healed raven shoulder photo",
+          "url": "/prototype-uploads/riley-healed-raven-shoulder.jpg"
+        }
+      ]
+    },
+    "budget": "$1,000 - $2,000",
+    "availability": "Completed work. Client may return for a matching left shoulder piece.",
+    "status": "completed",
+    "submittedAt": "2026-03-11T10:18:00-04:00",
+    "completedAt": "2026-04-18T15:30:00-04:00"
+  },
+  {
+    "id": "req_2026_0016",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Tessa",
+      "lastName": "Kim",
+      "email": "tessa.kim@example.test",
+      "phone": "+1 647-555-0108"
+    },
+    "tattoo": {
+      "description": "Completed color chrysanthemum half sleeve with teal leaves, coral petals, and dotwork background.",
+      "size": {
+        "width": 10,
+        "height": 13,
+        "unit": "in"
+      },
+      "placement": "Half sleeve",
+      "placementNotes": "Finished on the left upper arm from shoulder cap to just above the elbow.",
+      "colorMode": "Color",
+      "style": "Neo traditional",
+      "isCoverup": "Yes",
+      "coverupNotes": "Covered a faded script tattoo near the inner bicep."
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0020",
+          "label": "chrysanthemum color study",
+          "url": "/prototype-uploads/tessa-chrysanthemum-study.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0014",
+          "label": "finished chrysanthemum half sleeve",
+          "url": "/prototype-uploads/tessa-finished-half-sleeve.jpg"
+        }
+      ]
+    },
+    "budget": "$2,000+",
+    "availability": "Completed work. Useful reference for future floral sleeve inquiries.",
+    "status": "completed",
+    "submittedAt": "2026-02-20T13:50:00-05:00",
+    "completedAt": "2026-04-05T17:10:00-04:00"
+  }
+]
