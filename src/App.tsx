@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import AdminDashboard from './components/AdminDashboard'
 import TattooIntake from './components/TattooIntake'
-import heroImg from './assets/hero.png'
 
 type Route = 'home' | 'intake' | 'admin'
 
