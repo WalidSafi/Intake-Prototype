@@ -195,6 +195,12 @@ export function getTemplateFormFromTemplates(
     quoteTemplates: templates.quoteTemplates.join('\n'),
     requestFormMessage: templates.requestFormMessage,
     defaultLocation: templates.defaultLocation,
+    instagramEnabled: templates.socialLinks.instagram.enabled,
+    instagramUrl: templates.socialLinks.instagram.url,
+    tiktokEnabled: templates.socialLinks.tiktok.enabled,
+    tiktokUrl: templates.socialLinks.tiktok.url,
+    websiteEnabled: templates.socialLinks.website.enabled,
+    websiteUrl: templates.socialLinks.website.url,
     bookingLocations: templates.bookingLocations
       .map((location) => location.city)
       .join('\n'),
@@ -244,6 +250,20 @@ export function getTemplatesFromTemplateForm(
       .filter(Boolean),
     requestFormMessage: form.requestFormMessage.trim(),
     defaultLocation: form.defaultLocation.trim(),
+    socialLinks: {
+      instagram: {
+        enabled: form.instagramEnabled,
+        url: form.instagramUrl.trim(),
+      },
+      tiktok: {
+        enabled: form.tiktokEnabled,
+        url: form.tiktokUrl.trim(),
+      },
+      website: {
+        enabled: form.websiteEnabled,
+        url: form.websiteUrl.trim(),
+      },
+    },
     bookingLocations,
   }
 }

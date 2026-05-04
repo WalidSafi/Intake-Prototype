@@ -12,6 +12,13 @@ type EditableQuoteTemplate = {
   text: string
 }
 
+type SocialPlatform = 'instagram' | 'tiktok' | 'website'
+
+type EditableSocialLink = {
+  platform: SocialPlatform
+  url: string
+}
+
 type DashboardSettingsPanelProps = {
   compactInputClass: string
   compactTextareaClass: string
@@ -35,6 +42,36 @@ const iconButtonClass =
   'grid size-8 shrink-0 place-items-center rounded-lg text-[#8f4536] transition hover:-translate-y-px hover:bg-[#b95f43]/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 disabled:cursor-not-allowed disabled:opacity-40'
 
 const currencyOptions = ['CAD', 'USD', 'EUR', 'GBP', 'JPY', 'AUD']
+
+const socialOptions: Array<{
+  enabledField: keyof TemplateForm
+  label: string
+  platform: SocialPlatform
+  placeholder: string
+  urlField: keyof TemplateForm
+}> = [
+  {
+    enabledField: 'instagramEnabled',
+    label: 'Instagram',
+    platform: 'instagram',
+    placeholder: 'https://instagram.com/artistname',
+    urlField: 'instagramUrl',
+  },
+  {
+    enabledField: 'tiktokEnabled',
+    label: 'TikTok',
+    platform: 'tiktok',
+    placeholder: 'https://tiktok.com/@artistname',
+    urlField: 'tiktokUrl',
+  },
+  {
+    enabledField: 'websiteEnabled',
+    label: 'Portfolio',
+    platform: 'website',
+    placeholder: 'https://artistportfolio.com',
+    urlField: 'websiteUrl',
+  },
+]
 
 function TrashIcon() {
   return (
@@ -84,7 +121,7 @@ function getEditableLocations(templateForm: TemplateForm): EditableLocation[] {
 
   const locations = cities.map((city) => ({
     city,
-    travelDates: travelDatesByCity[city] ?? [],
+    travelDates: [travelDatesByCity[city]?.[0] ?? '', travelDatesByCity[city]?.[1] ?? ''],
   }))
 
   return locations
@@ -155,6 +192,43 @@ function formatQuoteTemplates(templates: EditableQuoteTemplate[]) {
     .join('\n')
 }
 
+function getEditableSocialLinks(templateForm: TemplateForm): EditableSocialLink[] {
+  return socialOptions
+    .map((option) => ({
+      platform: option.platform,
+      url: String(templateForm[option.urlField] ?? ''),
+      enabled: Boolean(templateForm[option.enabledField]),
+    }))
+    .filter((social) => social.enabled || social.url)
+    .map((social) => ({
+      platform: social.platform,
+      url: social.url,
+    }))
+}
+
+function getRangeDayCount(travelDates: string[]) {
+  const [startDate, endDate] = travelDates
+
+  if (!startDate && !endDate) {
+    return 0
+  }
+
+  if (!startDate || !endDate) {
+    return 1
+  }
+
+  const startTime = new Date(`${startDate}T00:00:00`).getTime()
+  const endTime = new Date(`${endDate}T00:00:00`).getTime()
+
+  if (Number.isNaN(startTime) || Number.isNaN(endTime)) {
+    return 0
+  }
+
+  const dayDifference = Math.abs(endTime - startTime) / 86_400_000
+
+  return Math.floor(dayDifference) + 1
+}
+
 /** Controlled settings panel for editing request form copy and reusable templates. */
 export default function DashboardSettingsPanel({
   compactInputClass,
@@ -167,6 +241,9 @@ export default function DashboardSettingsPanel({
 }: DashboardSettingsPanelProps) {
   const [locations, setLocations] = useState(() =>
     getEditableLocations(templateForm),
+  )
+  const [socialLinks, setSocialLinks] = useState(() =>
+    getEditableSocialLinks(templateForm),
   )
   const [quoteTemplates, setQuoteTemplates] = useState(() =>
     getEditableQuoteTemplates(templateForm.quoteTemplates),
@@ -181,6 +258,19 @@ export default function DashboardSettingsPanel({
     onTemplateFieldChange('travelDates', formattedLocations.travelDates)
   }
 
+  const updateSocialLinks = (nextSocialLinks: EditableSocialLink[]) => {
+    setSocialLinks(nextSocialLinks)
+
+    socialOptions.forEach((option) => {
+      const matchingSocial = nextSocialLinks.find(
+        (social) => social.platform === option.platform,
+      )
+
+      onTemplateFieldChange(option.enabledField, Boolean(matchingSocial))
+      onTemplateFieldChange(option.urlField, matchingSocial?.url ?? '')
+    })
+  }
+
   const updateQuoteTemplates = (nextTemplates: EditableQuoteTemplate[]) => {
     setQuoteTemplates(nextTemplates)
     onTemplateFieldChange('quoteTemplates', formatQuoteTemplates(nextTemplates))
@@ -191,67 +281,169 @@ export default function DashboardSettingsPanel({
       className={`grid gap-5 rounded-lg border p-4 ${panelClass}`}
       onSubmit={onSubmit}
     >
-      <div>
-        <h2 className="m-0 text-base font-bold">Settings</h2>
-        <p className={`m-0 text-xs font-semibold ${mutedTextClass}`}>
-          These settings update the public request form and booking workflows.
-        </p>
-      </div>
+      <section className="grid gap-3" aria-labelledby="settings-request-heading">
+        <h3 className="m-0 text-sm font-bold" id="settings-request-heading">
+          Request form
+        </h3>
 
-      <label className="grid gap-1 text-xs font-bold uppercase">
-        Request form message
-        <textarea
-          className={compactTextareaClass}
-          value={templateForm.requestFormMessage}
-          onChange={(event) =>
-            onTemplateFieldChange('requestFormMessage', event.target.value)
-          }
-        />
-      </label>
+        <label className="grid gap-1 text-xs font-bold uppercase">
+          Message
+          <textarea
+            className={compactTextareaClass}
+            value={templateForm.requestFormMessage}
+            onChange={(event) =>
+              onTemplateFieldChange('requestFormMessage', event.target.value)
+            }
+          />
+        </label>
 
-      <label className="grid gap-1 text-xs font-bold uppercase">
-        Default location
-        <input
-          className={compactInputClass}
-          value={templateForm.defaultLocation}
-          onChange={(event) =>
-            onTemplateFieldChange('defaultLocation', event.target.value)
-          }
-          placeholder="Main shop or home city"
-        />
-        <span className={`normal-case ${mutedTextClass}`}>
-          Used when the artist is taking bookings at their regular shop or city.
-        </span>
-      </label>
+        <label className="grid gap-1 text-xs font-bold uppercase">
+          Default city
+          <input
+            className={compactInputClass}
+            value={templateForm.defaultLocation}
+            onChange={(event) =>
+              onTemplateFieldChange('defaultLocation', event.target.value)
+            }
+            placeholder="Main shop or home city"
+          />
+        </label>
+
+        <div className="grid gap-2" aria-labelledby="settings-socials-heading">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <h3 className="m-0 text-sm font-bold" id="settings-socials-heading">
+              Social links
+            </h3>
+            <button
+              className={outlineButtonClass}
+              type="button"
+              disabled={socialLinks.length >= socialOptions.length}
+              onClick={() => {
+                const usedPlatforms = new Set(
+                  socialLinks.map((social) => social.platform),
+                )
+                const nextOption =
+                  socialOptions.find((option) => !usedPlatforms.has(option.platform)) ??
+                  socialOptions[0]
+
+                updateSocialLinks([
+                  ...socialLinks,
+                  { platform: nextOption.platform, url: '' },
+                ])
+              }}
+            >
+              Add social
+            </button>
+          </div>
+
+          <div className="grid gap-3">
+            {socialLinks.map((social, socialIndex) => {
+              const currentOption =
+                socialOptions.find((option) => option.platform === social.platform) ??
+                socialOptions[0]
+
+              return (
+                <div
+                  className="rounded-lg bg-[#b95f43]/[0.06] p-3"
+                  key={`${social.platform}-${socialIndex}`}
+                >
+                  <div className="grid gap-3 sm:grid-cols-[140px_minmax(180px,1fr)_auto] sm:items-end">
+                    <label className="grid gap-1 text-xs font-bold uppercase">
+                      Type
+                      <select
+                        className={compactInputClass}
+                        value={social.platform}
+                        onChange={(event) => {
+                          const nextPlatform = event.target.value as SocialPlatform
+                          const nextSocialLinks = [...socialLinks]
+                          nextSocialLinks[socialIndex] = {
+                            ...social,
+                            platform: nextPlatform,
+                          }
+                          updateSocialLinks(nextSocialLinks)
+                        }}
+                      >
+                        {socialOptions.map((option) => {
+                          const isUsed = socialLinks.some(
+                            (savedSocial, savedIndex) =>
+                              savedIndex !== socialIndex &&
+                              savedSocial.platform === option.platform,
+                          )
+
+                          return (
+                            <option
+                              disabled={isUsed}
+                              key={option.platform}
+                              value={option.platform}
+                            >
+                              {option.label}
+                            </option>
+                          )
+                        })}
+                      </select>
+                    </label>
+                    <label className="grid gap-1 text-xs font-bold uppercase">
+                      URL
+                      <input
+                        className={compactInputClass}
+                        value={social.url}
+                        onChange={(event) => {
+                          const nextSocialLinks = [...socialLinks]
+                          nextSocialLinks[socialIndex] = {
+                            ...social,
+                            url: event.target.value,
+                          }
+                          updateSocialLinks(nextSocialLinks)
+                        }}
+                        placeholder={currentOption.placeholder}
+                      />
+                    </label>
+                    <button
+                      className={`${iconButtonClass} self-end`}
+                      type="button"
+                      aria-label={`Remove ${currentOption.label} link`}
+                      title="Remove social link"
+                      onClick={() =>
+                        updateSocialLinks(
+                          socialLinks.filter((_, index) => index !== socialIndex),
+                        )
+                      }
+                    >
+                      <TrashIcon />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+            </div>
+      </section>
 
       <section className="grid gap-3" aria-labelledby="settings-locations-heading">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h3 className="m-0 text-sm font-bold" id="settings-locations-heading">
-              Booking locations
+              Locations
             </h3>
-            <p className={`m-0 text-xs font-semibold ${mutedTextClass}`}>
-              Add each city and the available travel dates shown on the intake form.
-            </p>
           </div>
           <button
             className={outlineButtonClass}
             type="button"
             onClick={() =>
-              updateLocations([...locations, { city: '', travelDates: [''] }])
+              updateLocations([...locations, { city: '', travelDates: ['', ''] }])
             }
           >
-            Add another location
+            Add location
           </button>
         </div>
 
         <div className="grid gap-3">
           {locations.map((location, locationIndex) => (
             <div
-              className="grid gap-4 rounded-lg bg-[#b95f43]/[0.06] p-3 sm:p-4"
+              className="rounded-lg bg-[#b95f43]/[0.06] p-3"
               key={`${location.city}-${locationIndex}`}
             >
-              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <div className="grid gap-3 sm:grid-cols-[minmax(120px,1fr)_minmax(130px,0.75fr)_minmax(130px,0.75fr)_auto_auto] sm:items-end">
                 <label className="grid gap-1 text-xs font-bold uppercase">
                   City
                   <input
@@ -268,6 +460,50 @@ export default function DashboardSettingsPanel({
                     placeholder="Toronto"
                   />
                 </label>
+                <label className="grid gap-1 text-xs font-bold uppercase">
+                  Start
+                  <input
+                    className={compactInputClass}
+                    type="date"
+                    value={location.travelDates[0] ?? ''}
+                    onChange={(event) => {
+                      const nextDates = [
+                        event.target.value,
+                        location.travelDates[1] ?? '',
+                      ]
+                      const nextLocations = [...locations]
+                      nextLocations[locationIndex] = {
+                        ...location,
+                        travelDates: nextDates,
+                      }
+                      updateLocations(nextLocations)
+                    }}
+                  />
+                </label>
+                <label className="grid gap-1 text-xs font-bold uppercase">
+                  End
+                  <input
+                    className={compactInputClass}
+                    type="date"
+                    value={location.travelDates[1] ?? ''}
+                    onChange={(event) => {
+                      const nextDates = [
+                        location.travelDates[0] ?? '',
+                        event.target.value,
+                      ]
+                      const nextLocations = [...locations]
+                      nextLocations[locationIndex] = {
+                        ...location,
+                        travelDates: nextDates,
+                      }
+                      updateLocations(nextLocations)
+                    }}
+                  />
+                </label>
+                <span className={`pb-2 text-xs font-bold normal-case ${mutedTextClass}`}>
+                  {getRangeDayCount(location.travelDates)}{' '}
+                  {getRangeDayCount(location.travelDates) === 1 ? 'day' : 'days'}
+                </span>
                 <button
                   className={`${iconButtonClass} self-end`}
                   type="button"
@@ -282,53 +518,6 @@ export default function DashboardSettingsPanel({
                   <TrashIcon />
                 </button>
               </div>
-
-              <div className="grid gap-2">
-                <p className="m-0 text-xs font-bold uppercase">Location dates</p>
-                <div className="flex flex-wrap items-center gap-2">
-                  {location.travelDates.map((travelDate, dateIndex) => (
-                    <div
-                      className="flex min-w-[190px] items-center gap-1"
-                      key={`${travelDate}-${dateIndex}`}
-                    >
-                      <input
-                        className={compactInputClass}
-                        type="date"
-                        value={travelDate}
-                        aria-label={`${location.city || 'Location'} date ${dateIndex + 1}`}
-                        onChange={(event) => {
-                          const nextDates = [...location.travelDates]
-                          nextDates[dateIndex] = event.target.value
-                          const nextLocations = [...locations]
-                          nextLocations[locationIndex] = {
-                            ...location,
-                            travelDates: nextDates,
-                          }
-                          updateLocations(nextLocations)
-                        }}
-                      />
-                    </div>
-                  ))}
-                  <span className={`text-xs font-bold normal-case ${mutedTextClass}`}>
-                    {location.travelDates.filter(Boolean).length} total{' '}
-                    {location.travelDates.filter(Boolean).length === 1 ? 'day' : 'days'}
-                  </span>
-                </div>
-                <button
-                  className={`${outlineButtonClass} w-fit`}
-                  type="button"
-                  onClick={() => {
-                    const nextLocations = [...locations]
-                    nextLocations[locationIndex] = {
-                      ...location,
-                      travelDates: [...location.travelDates, ''],
-                    }
-                    updateLocations(nextLocations)
-                  }}
-                >
-                  Add date
-                </button>
-              </div>
             </div>
           ))}
         </div>
@@ -338,11 +527,8 @@ export default function DashboardSettingsPanel({
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h3 className="m-0 text-sm font-bold" id="settings-quotes-heading">
-              Quote templates
+              Quotes
             </h3>
-            <p className={`m-0 text-xs font-semibold ${mutedTextClass}`}>
-              Save reusable quote text with an optional price or range.
-            </p>
           </div>
           <button
             className={outlineButtonClass}
@@ -354,17 +540,17 @@ export default function DashboardSettingsPanel({
               ])
             }
           >
-            Add quote template
+            Add quote
           </button>
         </div>
 
         <div className="grid gap-3">
           {quoteTemplates.map((template, templateIndex) => (
             <div
-              className="grid gap-3 rounded-lg bg-[#b95f43]/[0.06] p-3 sm:p-4"
+              className="rounded-lg bg-[#b95f43]/[0.06] p-3"
               key={`quote-template-${templateIndex}`}
             >
-              <div className="grid gap-3 sm:grid-cols-[96px_150px_minmax(0,1fr)_auto] sm:items-end">
+              <div className="grid gap-2 sm:grid-cols-[76px_104px_minmax(180px,1fr)_auto] sm:items-center">
                 <label className="grid gap-1 text-xs font-bold uppercase">
                   Currency
                   <select
@@ -402,9 +588,9 @@ export default function DashboardSettingsPanel({
                   />
                 </label>
                 <label className="grid gap-1 text-xs font-bold uppercase">
-                  Template text
-                  <textarea
-                    className={compactTextareaClass}
+                  Text
+                  <input
+                    className={compactInputClass}
                     value={template.text}
                     onChange={(event) => {
                       const nextTemplates = [...quoteTemplates]
@@ -418,7 +604,7 @@ export default function DashboardSettingsPanel({
                   />
                 </label>
                 <button
-                  className={`${iconButtonClass} self-end`}
+                  className={`${iconButtonClass} self-end sm:self-center sm:mt-5`}
                   type="button"
                   aria-label="Remove quote template"
                   title="Remove quote template"
@@ -440,7 +626,7 @@ export default function DashboardSettingsPanel({
         className={primaryButtonClass}
         type="submit"
       >
-        Save settings
+        Save
       </button>
     </form>
   )

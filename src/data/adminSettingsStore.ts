@@ -7,11 +7,23 @@ export type AdminTemplates = {
   requestFormMessage: string
   defaultLocation: string
   bookingLocations: BookingLocation[]
+  socialLinks: SocialLinks
 }
 
 export type BookingLocation = {
   city: string
   travelDates: string[]
+}
+
+export type SocialLink = {
+  enabled: boolean
+  url: string
+}
+
+export type SocialLinks = {
+  instagram: SocialLink
+  tiktok: SocialLink
+  website: SocialLink
 }
 
 const defaultTemplates: AdminTemplates = {
@@ -20,6 +32,11 @@ const defaultTemplates: AdminTemplates = {
     'Share as much detail as you can so I can understand the piece, timing, and best city for booking.',
   defaultLocation: '',
   bookingLocations: [],
+  socialLinks: {
+    instagram: { enabled: false, url: '' },
+    tiktok: { enabled: false, url: '' },
+    website: { enabled: false, url: '' },
+  },
 }
 
 function canUseLocalStorage() {
@@ -88,6 +105,29 @@ function normalizeTextValue(value: unknown, fallback: string) {
   return typeof value === 'string' ? value.trim() : fallback
 }
 
+function normalizeSocialLink(value: unknown, fallback: SocialLink): SocialLink {
+  if (!isRecord(value)) {
+    return { ...fallback }
+  }
+
+  return {
+    enabled: value.enabled === true,
+    url: normalizeTextValue(value.url, fallback.url),
+  }
+}
+
+function normalizeSocialLinks(value: unknown, fallback: SocialLinks): SocialLinks {
+  if (!isRecord(value)) {
+    return structuredClone(fallback)
+  }
+
+  return {
+    instagram: normalizeSocialLink(value.instagram, fallback.instagram),
+    tiktok: normalizeSocialLink(value.tiktok, fallback.tiktok),
+    website: normalizeSocialLink(value.website, fallback.website),
+  }
+}
+
 function normalizeBookingLocations(
   value: unknown,
   fallback: BookingLocation[],
@@ -154,6 +194,10 @@ export function getAdminTemplates(): AdminTemplates {
         parsedValue.bookingLocations,
         defaultTemplates.bookingLocations,
       ),
+      socialLinks: normalizeSocialLinks(
+        parsedValue.socialLinks,
+        defaultTemplates.socialLinks,
+      ),
     }
   } catch {
     return structuredClone(defaultTemplates)
@@ -173,6 +217,10 @@ export function saveAdminTemplates(templates: AdminTemplates) {
     bookingLocations: normalizeBookingLocations(
       templates.bookingLocations,
       defaultTemplates.bookingLocations,
+    ),
+    socialLinks: normalizeSocialLinks(
+      templates.socialLinks,
+      defaultTemplates.socialLinks,
     ),
   }
 
