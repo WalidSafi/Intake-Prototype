@@ -3,6 +3,7 @@ import DashboardSettingsPanel from './DashboardSettingsPanel'
 import type { TemplateForm } from './dashboardTypes'
 
 type DashboardSettingsViewProps = {
+  compactInputClass: string
   compactTextareaClass: string
   isDark: boolean
   mutedTextClass: string
@@ -19,6 +20,7 @@ type DashboardSettingsViewProps = {
 
 /** Full settings screen for artist request-form and booking configuration. */
 export default function DashboardSettingsView({
+  compactInputClass,
   compactTextareaClass,
   isDark,
   mutedTextClass,
@@ -76,6 +78,7 @@ export default function DashboardSettingsView({
         )}
 
         <DashboardSettingsPanel
+          compactInputClass={compactInputClass}
           compactTextareaClass={compactTextareaClass}
           mutedTextClass={mutedTextClass}
           onSubmit={onSubmit}

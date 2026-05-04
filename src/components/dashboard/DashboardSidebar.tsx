@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import DashboardFolderNav from './DashboardFolderNav'
 import type { DashboardFilter, FolderKey } from './dashboardTypes'
 
@@ -40,9 +41,9 @@ export default function DashboardSidebar({
     >
       <div className="flex items-center justify-between gap-3 xl:block">
         <div className="flex items-center gap-2">
-          <a
+          <Link
             className="grid size-10 place-items-center rounded-lg text-[#b95f43] transition hover:bg-[#f1e5da]"
-            href="#"
+            to="/"
             aria-label="Home"
             title="Home"
           >
@@ -60,7 +61,7 @@ export default function DashboardSidebar({
               <path d="M5 10v10h14V10" />
               <path d="M9 20v-6h6v6" />
             </svg>
-          </a>
+          </Link>
           <button
             className={`grid size-10 place-items-center rounded-lg border transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 ${panelClass} ${mutedTextClass}`}
             type="button"

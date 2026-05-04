@@ -4,8 +4,8 @@ const STORE_EVENT = 'boink-admin-settings-change'
 
 export type AdminTemplates = {
   quoteTemplates: string[]
-  sessionTemplates: string[]
   requestFormMessage: string
+  defaultLocation: string
   bookingLocations: BookingLocation[]
 }
 
@@ -20,24 +20,10 @@ const defaultTemplates: AdminTemplates = {
     'Custom piece quote: design time, tattoo session, and one optional touch-up review.',
     'Large project quote: staged design approval with multiple tattoo sessions.',
   ],
-  sessionTemplates: [
-    'Tattoo session',
-    'Consultation',
-    'Touch-up',
-    'Follow-up',
-  ],
   requestFormMessage:
     'Share as much detail as you can so I can understand the piece, timing, and best city for booking.',
-  bookingLocations: [
-    {
-      city: 'Toronto',
-      travelDates: ['2026-06-12', '2026-06-13', '2026-06-14'],
-    },
-    {
-      city: 'Montreal',
-      travelDates: ['2026-07-18', '2026-07-19'],
-    },
-  ],
+  defaultLocation: '',
+  bookingLocations: [],
 }
 
 function canUseLocalStorage() {
@@ -59,6 +45,10 @@ function normalizeTemplateList(value: unknown, fallback: string[]) {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+function normalizeTextValue(value: unknown, fallback: string) {
+  return typeof value === 'string' ? value.trim() : fallback
 }
 
 function normalizeBookingLocations(
@@ -113,14 +103,15 @@ export function getAdminTemplates(): AdminTemplates {
         parsedValue.quoteTemplates,
         defaultTemplates.quoteTemplates,
       ),
-      sessionTemplates: normalizeTemplateList(
-        parsedValue.sessionTemplates,
-        defaultTemplates.sessionTemplates,
-      ),
       requestFormMessage:
-        typeof parsedValue.requestFormMessage === 'string'
-          ? parsedValue.requestFormMessage.trim()
-          : defaultTemplates.requestFormMessage,
+        normalizeTextValue(
+          parsedValue.requestFormMessage,
+          defaultTemplates.requestFormMessage,
+        ),
+      defaultLocation: normalizeTextValue(
+        parsedValue.defaultLocation,
+        defaultTemplates.defaultLocation,
+      ),
       bookingLocations: normalizeBookingLocations(
         parsedValue.bookingLocations,
         defaultTemplates.bookingLocations,
@@ -137,12 +128,9 @@ export function saveAdminTemplates(templates: AdminTemplates) {
       templates.quoteTemplates,
       defaultTemplates.quoteTemplates,
     ),
-    sessionTemplates: normalizeTemplateList(
-      templates.sessionTemplates,
-      defaultTemplates.sessionTemplates,
-    ),
     requestFormMessage:
       templates.requestFormMessage.trim() || defaultTemplates.requestFormMessage,
+    defaultLocation: templates.defaultLocation.trim(),
     bookingLocations: normalizeBookingLocations(
       templates.bookingLocations,
       defaultTemplates.bookingLocations,

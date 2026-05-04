@@ -71,6 +71,12 @@ type HeaderIconButtonProps = {
   title?: string
 }
 
+type AdminDashboardProps = {
+  onCloseSettingsRoute?: () => void
+  onOpenSettingsRoute?: () => void
+  settingsRoute?: boolean
+}
+
 /** Local square icon button for the dashboard header actions. */
 function HeaderIconButton({
   children,
@@ -92,11 +98,15 @@ function HeaderIconButton({
   )
 }
 
-export default function AdminDashboard() {
+export default function AdminDashboard({
+  onCloseSettingsRoute,
+  onOpenSettingsRoute,
+  settingsRoute = false,
+}: AdminDashboardProps) {
   const [filter, setFilter] = useState<FolderKey>('new')
   const [query, setQuery] = useState('')
   const [isDark, setIsDark] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false)
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null)
   const [requestRecords, setRequestRecords] = useState<TattooRequest[]>(getRequests)
   const [templates, setTemplates] = useState<AdminTemplates>(getAdminTemplates)
@@ -362,6 +372,7 @@ export default function AdminDashboard() {
 
     if (
       selectedRequest.status !== 'approved_for_booking' &&
+      selectedRequest.status !== 'booked' &&
       selectedRequest.status !== 'completed'
     ) {
       setStatusMessage('Move this client to Ready to book, or schedule it from Completed as a touch-up.')
@@ -389,6 +400,21 @@ export default function AdminDashboard() {
       notes: bookingForm.notes.trim(),
       bookedAt: selectedRequest.appointment?.bookedAt ?? new Date().toISOString(),
     })
+    if (selectedRequest.status !== 'completed') {
+      updateRequestStatus(selectedRequest.id, 'booked', {
+        completedAt: null,
+        bookkeeping: null,
+        auditEvent: createAuditEvent(selectedRequest.id, {
+          type: 'status_changed',
+          label: selectedRequest.status === 'booked'
+            ? 'Booking updated'
+            : 'Session booked',
+          date: bookingForm.date,
+          notes: `${bookingForm.service.trim() || 'Tattoo session'} at ${bookingForm.startTime}`,
+        }),
+      })
+      setFilter('booked')
+    }
     setStatusMessage(`Booked ${formatRequestId(selectedRequest.id)} for ${bookingForm.date} at ${bookingForm.startTime}.`)
     setBookingRequestId(null)
   }
@@ -399,6 +425,17 @@ export default function AdminDashboard() {
     }
 
     updateRequestAppointment(selectedRequest.id, null)
+    if (selectedRequest.status === 'booked') {
+      updateRequestStatus(selectedRequest.id, 'approved_for_booking', {
+        auditEvent: createAuditEvent(selectedRequest.id, {
+          type: 'status_changed',
+          label: 'Booking removed',
+          date: new Date().toISOString().slice(0, 10),
+          notes: 'Moved back to Ready to book after removing the appointment.',
+        }),
+      })
+      setFilter('approved_for_booking')
+    }
     setStatusMessage(`Removed booking for ${formatRequestId(selectedRequest.id)}.`)
     setBookingRequestId(null)
   }
@@ -548,15 +585,21 @@ export default function AdminDashboard() {
       ? 'border-[#3c332e] text-[#fffaf5] placeholder:text-[#8f8178]'
       : 'border-[#c9beb1] text-[#201b18] placeholder:text-[#9a8b81]'
   }`
+  const showSettings =
+    settingsRoute || (!onOpenSettingsRoute && showSettingsPanel)
 
   if (showSettings) {
     return (
       <main className={shellClass}>
         <DashboardSettingsView
+          compactInputClass={compactInputClass}
           compactTextareaClass={compactTextareaClass}
           isDark={isDark}
           mutedTextClass={mutedTextClass}
-          onBack={() => setShowSettings(false)}
+          onBack={() => {
+            onCloseSettingsRoute?.()
+            setShowSettingsPanel(false)
+          }}
           onSubmit={saveTemplateSettings}
           onTemplateFieldChange={updateTemplateForm}
           panelClass={panelClass}
@@ -577,7 +620,14 @@ export default function AdminDashboard() {
           isDark={isDark}
           mutedTextClass={mutedTextClass}
           onEmptyDeleted={emptyDeletedFolder}
-          onOpenSettings={() => setShowSettings(true)}
+          onOpenSettings={() => {
+            if (onOpenSettingsRoute) {
+              onOpenSettingsRoute()
+              return
+            }
+
+            setShowSettingsPanel(true)
+          }}
           onSelectFilter={setFilter}
           panelClass={panelClass}
         />
@@ -825,7 +875,6 @@ export default function AdminDashboard() {
                       onFieldChange={updateBookingField}
                       onSubmit={saveBooking}
                       request={selectedRequest}
-                      templates={templates}
                     />
                   )}
 

@@ -1,4 +1,5 @@
 import { type FormEvent, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import heroImg from '../assets/hero.png'
 import {
   getAdminTemplates,
@@ -192,6 +193,7 @@ function FileUploadText({
 }
 
 export default function TattooIntake() {
+  const navigate = useNavigate()
   const [form, setForm] = useState<TattooIntakeForm>(initialForm)
   const [settings, setSettings] = useState<AdminTemplates>(getAdminTemplates)
   const [submitted, setSubmitted] = useState(false)
@@ -218,6 +220,14 @@ export default function TattooIntake() {
   const selectedBookingLocation = settings.bookingLocations.find(
     (location) => location.city === form.bookingLocation,
   )
+  const bookingLocationOptions: BookingLocation[] = [
+    ...(settings.defaultLocation
+      ? [{ city: settings.defaultLocation, travelDates: [] }]
+      : []),
+    ...settings.bookingLocations.filter(
+      (location) => location.city !== settings.defaultLocation,
+    ),
+  ]
 
   const updateField = <Field extends keyof TattooIntakeForm>(
     field: Field,
@@ -278,9 +288,7 @@ export default function TattooIntake() {
   }
 
   const returnHome = () => {
-    const homeUrl = `${window.location.pathname}${window.location.search}`
-    window.history.pushState(null, '', homeUrl)
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    navigate('/')
   }
 
   const clientName =
@@ -451,9 +459,12 @@ export default function TattooIntake() {
                 }}
               >
                 <option value="">Select city</option>
-                {settings.bookingLocations.map((location: BookingLocation) => (
+                {bookingLocationOptions.map((location: BookingLocation) => (
                   <option key={location.city} value={location.city}>
                     {location.city}
+                    {location.city === settings.defaultLocation
+                      ? ' (default)'
+                      : ''}
                   </option>
                 ))}
               </select>

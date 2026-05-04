@@ -15,6 +15,7 @@ export const statusLabel: Record<RequestStatus, string> = {
   needs_review: 'Needs review',
   quoted: 'Quoted',
   approved_for_booking: 'Ready to book',
+  booked: 'Booked',
   completed: 'Completed',
   archived: 'Deleted',
 }
@@ -25,6 +26,7 @@ export const statusClass: Record<RequestStatus, string> = {
   needs_review: 'border-[#c6a13f] bg-[#fff7d8] text-[#6d5413]',
   quoted: 'border-[#6ba978] bg-[#eef8f0] text-[#276037]',
   approved_for_booking: 'border-[#638ab7] bg-[#edf4ff] text-[#2c547f]',
+  booked: 'border-[#7c74bd] bg-[#f2f0ff] text-[#463d8a]',
   completed: 'border-[#8d7a6c] bg-[#f4eee8] text-[#5a4d46]',
   archived: 'border-[#aa5757] bg-[#fff0f0] text-[#743030]',
 }
@@ -35,6 +37,7 @@ export const folderStatuses: FolderKey[] = [
   'needs_review',
   'quoted',
   'approved_for_booking',
+  'booked',
   'completed',
   'archived',
 ]
@@ -42,6 +45,14 @@ export const folderStatuses: FolderKey[] = [
 /** Shared sizing and focus treatment for detail-pane action buttons. */
 export const actionButtonBaseClass =
   'min-h-[38px] w-full rounded-lg border px-3 text-xs font-bold transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 sm:w-fit'
+
+/** Fixed service options for admin booking appointments. */
+export const bookingServiceOptions = [
+  'Tattoo session',
+  'Consultation',
+  'Touch-up',
+  'Follow-up',
+]
 
 /** Defaults used when opening the completed/payment workflow for the first time. */
 export const initialCompletionForm: CompletionForm = {

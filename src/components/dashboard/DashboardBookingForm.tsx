@@ -1,5 +1,6 @@
 import type { FormEvent, ReactNode } from 'react'
-import type { AdminTemplates, BookingForm, TattooRequest } from './dashboardTypes'
+import { bookingServiceOptions } from './dashboardConstants'
+import type { BookingForm, TattooRequest } from './dashboardTypes'
 
 type DashboardBookingFormProps = {
   calendarPanel: ReactNode
@@ -15,7 +16,6 @@ type DashboardBookingFormProps = {
   ) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   request: TattooRequest
-  templates: AdminTemplates
 }
 
 /** Renders admin booking controls and receives the shared calendar as a child boundary. */
@@ -30,7 +30,6 @@ export default function DashboardBookingForm({
   onFieldChange,
   onSubmit,
   request,
-  templates,
 }: DashboardBookingFormProps) {
   return (
     <form
@@ -115,7 +114,7 @@ export default function DashboardBookingForm({
             value={form.service}
             onChange={(event) => onFieldChange('service', event.target.value)}
           >
-            {templates.sessionTemplates.map((template) => (
+            {bookingServiceOptions.map((template) => (
               <option key={template}>{template}</option>
             ))}
           </select>
