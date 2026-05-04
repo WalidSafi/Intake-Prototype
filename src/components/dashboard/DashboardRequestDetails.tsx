@@ -182,6 +182,14 @@ function getRequestDetailItems(
     },
     { label: 'Budget', value: request.budget },
     {
+      label: 'Booking location',
+      value: request.bookingLocation || 'Not set',
+    },
+    {
+      label: 'Travel date',
+      value: request.travelDate || 'Not selected',
+    },
+    {
       label: 'Submitted',
       value: formatSubmittedAt(request.submittedAt),
     },

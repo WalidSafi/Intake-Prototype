@@ -194,13 +194,49 @@ export function getTemplateFormFromTemplates(
   return {
     quoteTemplates: templates.quoteTemplates.join('\n'),
     sessionTemplates: templates.sessionTemplates.join('\n'),
+    requestFormMessage: templates.requestFormMessage,
+    bookingLocations: templates.bookingLocations
+      .map((location) => location.city)
+      .join('\n'),
+    travelDates: templates.bookingLocations
+      .map((location) => `${location.city} | ${location.travelDates.join(', ')}`)
+      .join('\n'),
   }
+}
+
+/** Parses dashboard travel rows like "Toronto | 2026-06-12, 2026-06-13". */
+function getTravelDatesByCity(value: string) {
+  return value.split('\n').reduce<Record<string, string[]>>((datesByCity, row) => {
+    const [cityValue, datesValue = ''] = row.split('|')
+    const city = cityValue.trim()
+
+    if (!city) {
+      return datesByCity
+    }
+
+    datesByCity[city] = datesValue
+      .split(',')
+      .map((date) => date.trim())
+      .filter(Boolean)
+
+    return datesByCity
+  }, {})
 }
 
 /** Converts settings textarea values back into trimmed template arrays. */
 export function getTemplatesFromTemplateForm(
   form: TemplateForm,
 ): AdminTemplates {
+  const travelDatesByCity = getTravelDatesByCity(form.travelDates)
+  const bookingLocations = form.bookingLocations
+    .split('\n')
+    .map((city) => city.trim())
+    .filter(Boolean)
+    .map((city) => ({
+      city,
+      travelDates: travelDatesByCity[city] ?? [],
+    }))
+
   return {
     quoteTemplates: form.quoteTemplates
       .split('\n')
@@ -210,6 +246,8 @@ export function getTemplatesFromTemplateForm(
       .split('\n')
       .map((item) => item.trim())
       .filter(Boolean),
+    requestFormMessage: form.requestFormMessage.trim(),
+    bookingLocations,
   }
 }
 
@@ -238,6 +276,8 @@ export function getRequestSearchableText(request: TattooRequest) {
     request.tattoo.placement,
     request.tattoo.style,
     request.tattoo.colorMode,
+    request.bookingLocation,
+    request.travelDate,
     request.budget,
     request.status,
     request.completedAt ?? '',

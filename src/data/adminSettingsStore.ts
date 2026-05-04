@@ -1,9 +1,17 @@
-const STORAGE_KEY = 'nilab-admin-settings'
-const STORE_EVENT = 'nilab-admin-settings-change'
+const STORAGE_KEY = 'boink-admin-settings'
+const LEGACY_STORAGE_KEY = 'nilab-admin-settings'
+const STORE_EVENT = 'boink-admin-settings-change'
 
 export type AdminTemplates = {
   quoteTemplates: string[]
   sessionTemplates: string[]
+  requestFormMessage: string
+  bookingLocations: BookingLocation[]
+}
+
+export type BookingLocation = {
+  city: string
+  travelDates: string[]
 }
 
 const defaultTemplates: AdminTemplates = {
@@ -17,6 +25,18 @@ const defaultTemplates: AdminTemplates = {
     'Consultation',
     'Touch-up',
     'Follow-up',
+  ],
+  requestFormMessage:
+    'Share as much detail as you can so I can understand the piece, timing, and best city for booking.',
+  bookingLocations: [
+    {
+      city: 'Toronto',
+      travelDates: ['2026-06-12', '2026-06-13', '2026-06-14'],
+    },
+    {
+      city: 'Montreal',
+      travelDates: ['2026-07-18', '2026-07-19'],
+    },
   ],
 }
 
@@ -37,12 +57,49 @@ function normalizeTemplateList(value: unknown, fallback: string[]) {
   return normalized.length ? normalized : fallback
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function normalizeBookingLocations(
+  value: unknown,
+  fallback: BookingLocation[],
+) {
+  if (!Array.isArray(value)) {
+    return structuredClone(fallback)
+  }
+
+  const normalized = value.flatMap((item) => {
+    if (!isRecord(item) || typeof item.city !== 'string') {
+      return []
+    }
+
+    const city = item.city.trim()
+    if (!city) {
+      return []
+    }
+
+    const travelDates = Array.isArray(item.travelDates)
+      ? item.travelDates
+          .filter((date): date is string => typeof date === 'string')
+          .map((date) => date.trim())
+          .filter(Boolean)
+      : []
+
+    return [{ city, travelDates }]
+  })
+
+  return normalized.length ? normalized : structuredClone(fallback)
+}
+
 export function getAdminTemplates(): AdminTemplates {
   if (!canUseLocalStorage()) {
     return structuredClone(defaultTemplates)
   }
 
-  const storedValue = window.localStorage.getItem(STORAGE_KEY)
+  const storedValue =
+    window.localStorage.getItem(STORAGE_KEY) ??
+    window.localStorage.getItem(LEGACY_STORAGE_KEY)
 
   if (!storedValue) {
     return structuredClone(defaultTemplates)
@@ -60,6 +117,14 @@ export function getAdminTemplates(): AdminTemplates {
         parsedValue.sessionTemplates,
         defaultTemplates.sessionTemplates,
       ),
+      requestFormMessage:
+        typeof parsedValue.requestFormMessage === 'string'
+          ? parsedValue.requestFormMessage.trim()
+          : defaultTemplates.requestFormMessage,
+      bookingLocations: normalizeBookingLocations(
+        parsedValue.bookingLocations,
+        defaultTemplates.bookingLocations,
+      ),
     }
   } catch {
     return structuredClone(defaultTemplates)
@@ -75,6 +140,12 @@ export function saveAdminTemplates(templates: AdminTemplates) {
     sessionTemplates: normalizeTemplateList(
       templates.sessionTemplates,
       defaultTemplates.sessionTemplates,
+    ),
+    requestFormMessage:
+      templates.requestFormMessage.trim() || defaultTemplates.requestFormMessage,
+    bookingLocations: normalizeBookingLocations(
+      templates.bookingLocations,
+      defaultTemplates.bookingLocations,
     ),
   }
 

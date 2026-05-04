@@ -13,7 +13,7 @@ type DashboardSettingsPanelProps = {
   templateForm: TemplateForm
 }
 
-/** Controlled settings panel for editing reusable quote and session templates. */
+/** Controlled settings panel for editing request form copy and reusable templates. */
 export default function DashboardSettingsPanel({
   compactTextareaClass,
   mutedTextClass,
@@ -24,15 +24,48 @@ export default function DashboardSettingsPanel({
 }: DashboardSettingsPanelProps) {
   return (
     <form
-      className={`mt-6 grid gap-3 rounded-lg border p-3 ${panelClass}`}
+      className={`grid gap-3 rounded-lg border p-3 ${panelClass}`}
       onSubmit={onSubmit}
     >
       <div>
         <h2 className="m-0 text-base font-bold">Settings</h2>
         <p className={`m-0 text-xs font-semibold ${mutedTextClass}`}>
-          Templates show up in quote and booking workflows.
+          These settings update the public request form and booking workflows.
         </p>
       </div>
+      <label className="grid gap-1 text-xs font-bold uppercase">
+        Request form message
+        <textarea
+          className={compactTextareaClass}
+          value={templateForm.requestFormMessage}
+          onChange={(event) =>
+            onTemplateFieldChange('requestFormMessage', event.target.value)
+          }
+        />
+      </label>
+      <label className="grid gap-1 text-xs font-bold uppercase">
+        Booking locations
+        <textarea
+          className={compactTextareaClass}
+          value={templateForm.bookingLocations}
+          onChange={(event) =>
+            onTemplateFieldChange('bookingLocations', event.target.value)
+          }
+        />
+      </label>
+      <label className="grid gap-1 text-xs font-bold uppercase">
+        Travel dates per city
+        <textarea
+          className={compactTextareaClass}
+          value={templateForm.travelDates}
+          onChange={(event) =>
+            onTemplateFieldChange('travelDates', event.target.value)
+          }
+        />
+        <span className={`normal-case ${mutedTextClass}`}>
+          Format: City | YYYY-MM-DD, YYYY-MM-DD
+        </span>
+      </label>
       <label className="grid gap-1 text-xs font-bold uppercase">
         Quote templates
         <textarea
