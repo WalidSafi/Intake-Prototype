@@ -170,8 +170,10 @@ function AdminDashboardRoute({ showSettings = false }: { showSettings?: boolean 
 }
 
 function App() {
+  const routerBasename = import.meta.env.PROD ? import.meta.env.BASE_URL : undefined
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename}>
       <LegacyHashRedirect />
       <Routes>
         <Route path="/" element={<Homepage />} />

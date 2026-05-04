@@ -127,11 +127,17 @@ The frontend uses `BrowserRouter`, so production static hosting must serve
 `index.html` for deep links such as `/request`, `/admin`, and
 `/admin/settings`.
 
-The production frontend is configured for a root base URL (`/`). GitHub Pages
-is configured in `.github/workflows/deploy.yml`; the deploy job copies
-`dist/index.html` to `dist/404.html` so deep links fall back to the SPA. Other
-hosts need their equivalent rewrite rule, for example: Netlify `_redirects`,
-Vercel `rewrites`, Firebase `rewrites`, or Azure Static Web Apps
+The production frontend is configured for the GitHub Pages project URL
+(`/Intake-Prototype/`). This is required when the app is deployed at
+`https://<user>.github.io/Intake-Prototype/`; otherwise built assets would point
+to `/assets/...` at the domain root and return 404. If the app moves to a custom
+domain at the root, change `base` in `vite.config.ts` back to `/` and remove the
+production `BrowserRouter` basename.
+
+GitHub Pages is configured in `.github/workflows/deploy.yml`; the deploy job
+copies `dist/index.html` to `dist/404.html` so deep links fall back to the SPA.
+Other hosts need their equivalent rewrite rule, for example: Netlify
+`_redirects`, Vercel `rewrites`, Firebase `rewrites`, or Azure Static Web Apps
 `navigationFallback`.
 
 ## Common Dev Setup
