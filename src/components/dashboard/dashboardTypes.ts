@@ -60,6 +60,12 @@ export type TemplateForm = {
   quoteTemplates: string
   requestFormMessage: string
   defaultLocation: string
+  instagramEnabled: boolean
+  instagramUrl: string
+  tiktokEnabled: boolean
+  tiktokUrl: string
+  websiteEnabled: boolean
+  websiteUrl: string
   bookingLocations: string
   travelDates: string
 }

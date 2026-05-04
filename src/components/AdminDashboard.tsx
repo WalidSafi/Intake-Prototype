@@ -634,7 +634,6 @@ export default function AdminDashboard({
       <div className="grid min-h-screen xl:grid-cols-[260px_minmax(0,1fr)]">
         <DashboardSidebar
           activeFilter={filter}
-          artist={artist}
           filters={filters}
           isDark={isDark}
           mutedTextClass={mutedTextClass}
@@ -648,7 +647,6 @@ export default function AdminDashboard({
             setShowSettingsPanel(true)
           }}
           onSelectFilter={setFilter}
-          panelClass={panelClass}
         />
 
         <section className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)] overflow-hidden">
@@ -783,9 +781,7 @@ export default function AdminDashboard({
             >
               <div className="flex items-center justify-between gap-3 border-b border-inherit px-4 py-3">
                 <div>
-                  <p className="m-0 text-xs font-bold tracking-[0.12em] text-[#b95f43] uppercase">
-                    Workflow folder
-                  </p>
+                  
                   <h2 className="m-0 text-xl font-bold" id="inbox-heading">
                     {statusLabel[filter]}
                   </h2>

@@ -172,6 +172,36 @@ function FieldText({
   )
 }
 
+function SocialIcon({ type }: { type: 'instagram' | 'tiktok' | 'website' }) {
+  if (type === 'instagram') {
+    return (
+      <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+        <rect height="20" rx="5" width="20" x="2" y="2" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" />
+        <path d="M17.5 6.5h.01" />
+      </svg>
+    )
+  }
+
+  if (type === 'tiktok') {
+    return (
+      <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M14 3v10.5a4.5 4.5 0 1 1-4.5-4.5" />
+        <path d="M14 3c.7 3.2 2.6 5.1 6 5.5" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20" />
+      <path d="M12 2a15.3 15.3 0 0 1 0 20" />
+      <path d="M12 2a15.3 15.3 0 0 0 0 20" />
+    </svg>
+  )
+}
+
 function FileUploadText({
   title,
   files,
@@ -296,6 +326,23 @@ export default function TattooIntake() {
       ? `${form.firstName} ${form.lastName}`.trim()
       : 'Not set'
   const locationName = form.bookingLocation || 'Not set'
+  const publicSocialLinks = [
+    {
+      label: 'Instagram',
+      type: 'instagram' as const,
+      ...settings.socialLinks.instagram,
+    },
+    {
+      label: 'TikTok',
+      type: 'tiktok' as const,
+      ...settings.socialLinks.tiktok,
+    },
+    {
+      label: 'Portfolio',
+      type: 'website' as const,
+      ...settings.socialLinks.website,
+    },
+  ].filter((social) => social.enabled && social.url)
 
   return (
     <main className="grid min-h-screen bg-[#f7f0e8] lg:grid-cols-[minmax(300px,410px)_minmax(0,1fr)]">
@@ -334,6 +381,22 @@ export default function TattooIntake() {
           <br /> 
           Request Form
         </h4>
+        {publicSocialLinks.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2" aria-label="Artist social links">
+            {publicSocialLinks.map((social) => (
+              <a
+                className="inline-flex min-h-[34px] items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 text-xs font-bold text-[#fffaf5] transition hover:-translate-y-px hover:border-[#f3b29b]/55 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#f3b29b]/35"
+                href={social.url}
+                key={social.type}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <SocialIcon type={social.type} />
+                <span>{social.label}</span>
+              </a>
+            ))}
+          </div>
+        )}
         <p className="mt-5 max-w-[30ch] text-sm leading-relaxed text-[#fffaf5]/78">
           {settings.requestFormMessage}
         </p>

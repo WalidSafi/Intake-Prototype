@@ -2,53 +2,48 @@ import { Link } from 'react-router-dom'
 import DashboardFolderNav from './DashboardFolderNav'
 import type { DashboardFilter, FolderKey } from './dashboardTypes'
 
-type DashboardSidebarArtist = {
-  name: string
-  socials?: {
-    instagram?: string
-  }
-}
-
 type DashboardSidebarProps = {
   activeFilter: FolderKey
-  artist?: DashboardSidebarArtist
   filters: DashboardFilter[]
   isDark: boolean
   mutedTextClass: string
   onEmptyDeleted: () => void
   onOpenSettings: () => void
   onSelectFilter: (filter: FolderKey) => void
-  panelClass: string
 }
 
 /** Sidebar navigation and artist identity for the admin dashboard. */
 export default function DashboardSidebar({
   activeFilter,
-  artist,
   filters,
   isDark,
   mutedTextClass,
   onEmptyDeleted,
   onOpenSettings,
   onSelectFilter,
-  panelClass,
 }: DashboardSidebarProps) {
+  const iconActionClass = `grid size-11 place-items-center rounded-lg transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 ${
+    isDark
+      ? 'bg-[#211d1a] text-[#cbbdb3] hover:bg-[#2b2420] hover:text-[#f3d6ca]'
+      : 'bg-[#f6eee7] text-[#8f4536] hover:bg-[#f1e5da]'
+  }`
+
   return (
     <aside
-      className={`min-w-0 border-b px-4 py-4 xl:border-b-0 xl:border-r xl:px-5 xl:py-5 ${
-        isDark ? 'border-[#3c332e] bg-[#171311]' : 'border-[#dbd1c5] bg-white'
+      className={`min-w-0 px-4 py-4 shadow-[0_1px_0_rgba(143,69,54,0.12)] xl:px-5 xl:py-5 xl:shadow-[1px_0_0_rgba(143,69,54,0.10)] ${
+        isDark ? 'bg-[#171311]' : 'bg-white'
       }`}
     >
       <div className="flex items-center justify-between gap-3 xl:block">
         <div className="flex items-center gap-2">
           <Link
-            className="grid size-10 place-items-center rounded-lg text-[#b95f43] transition hover:bg-[#f1e5da]"
+            className={iconActionClass}
             to="/"
             aria-label="Home"
             title="Home"
           >
             <svg
-              className="size-5"
+              className="size-5.5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -63,7 +58,7 @@ export default function DashboardSidebar({
             </svg>
           </Link>
           <button
-            className={`grid size-10 place-items-center rounded-lg border transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 ${panelClass} ${mutedTextClass}`}
+            className={iconActionClass}
             type="button"
             onClick={onOpenSettings}
             aria-label="Open settings"
@@ -71,7 +66,7 @@ export default function DashboardSidebar({
           >
             <svg
               aria-hidden="true"
-              className="size-5"
+              className="size-5.5"
               fill="none"
               stroke="currentColor"
               strokeLinecap="round"
@@ -85,38 +80,13 @@ export default function DashboardSidebar({
           </button>
         </div>
 
-        <div className="min-w-0 text-right xl:mt-8 xl:text-left">
-          <div className="flex min-w-0 items-center justify-end gap-2 xl:justify-start">
-            <p className="m-0 truncate text-sm font-bold tracking-[0.12em] text-[#b95f43] uppercase xl:text-lg">
-              {artist?.name}
-            </p>
-            {artist?.socials?.instagram && (
-              <a
-                className="grid size-8 shrink-0 place-items-center rounded-lg text-[#b95f43] transition hover:bg-[#f1e5da]"
-                href={artist.socials.instagram}
-                aria-label={`${artist.name} Instagram`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
-              </a>
-            )}
-          </div>
+        <div
+          className={`min-w-0 text-right xl:mt-8 xl:border-b xl:pb-5 xl:text-left ${
+            isDark ? 'xl:border-[#2c2622]' : 'xl:border-[#eadfd4]'
+          }`}
+        >
           <h1 className="m-0 text-2xl leading-tight font-bold xl:text-3xl">
-            Inbox
+            Overview
           </h1>
         </div>
       </div>
@@ -128,7 +98,6 @@ export default function DashboardSidebar({
         isDark={isDark}
         mutedTextClass={mutedTextClass}
         onSelect={onSelectFilter}
-        panelClass={panelClass}
       />
       {activeFilter === 'archived' && (
         <button
