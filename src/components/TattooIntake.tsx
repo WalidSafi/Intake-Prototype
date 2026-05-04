@@ -1,5 +1,11 @@
-import { type FormEvent, useMemo, useState } from 'react'
+import { type FormEvent, useEffect, useMemo, useState } from 'react'
 import heroImg from '../assets/hero.png'
+import {
+  getAdminTemplates,
+  subscribeToAdminTemplates,
+  type BookingLocation,
+  type AdminTemplates,
+} from '../data/adminSettingsStore'
 import {
   appendTattooRequest,
   type NewTattooRequestInput,
@@ -25,6 +31,8 @@ type TattooIntakeForm = {
   bodyPhotos: FileList | null
   budget: string
   availability: string
+  bookingLocation: string
+  travelDate: string
   consent: boolean
 }
 
@@ -47,6 +55,8 @@ const initialForm: TattooIntakeForm = {
   bodyPhotos: null,
   budget: '',
   availability: '',
+  bookingLocation: '',
+  travelDate: '',
   consent: false,
 }
 
@@ -57,6 +67,7 @@ const requiredFields: Array<keyof TattooIntakeForm> = [
   'width',
   'height',
   'placement',
+  'bookingLocation',
 ]
 
 const placements = [
@@ -71,23 +82,12 @@ const placements = [
   'Back',
   'Ribs',
   'Neck',
+  'Flexible',
+  'Unknown',
   'Other',
 ]
 
 const colorModes = ['Black and grey', 'Color', 'Blackwork', 'Not sure yet']
-
-const tattooStyles = [
-  'Not sure yet',
-  'Fineline',
-  'American traditional',
-  'Blackwork',
-  'Japanese',
-  'Realism',
-  'Script',
-  'Ornamental',
-  'Neo traditional',
-  'Minimal',
-]
 
 const budgets = [
   'I need guidance',
@@ -193,8 +193,15 @@ function FileUploadText({
 
 export default function TattooIntake() {
   const [form, setForm] = useState<TattooIntakeForm>(initialForm)
+  const [settings, setSettings] = useState<AdminTemplates>(getAdminTemplates)
   const [submitted, setSubmitted] = useState(false)
   const [submittedRequestId, setSubmittedRequestId] = useState('')
+
+  useEffect(() => {
+    return subscribeToAdminTemplates(() => {
+      setSettings(getAdminTemplates())
+    })
+  }, [])
 
   const completion = useMemo(() => {
     const completed = requiredFields.filter((field) => {
@@ -207,6 +214,10 @@ export default function TattooIntake() {
 
     return Math.round((completed / requiredFields.length) * 100)
   }, [form])
+
+  const selectedBookingLocation = settings.bookingLocations.find(
+    (location) => location.city === form.bookingLocation,
+  )
 
   const updateField = <Field extends keyof TattooIntakeForm>(
     field: Field,
@@ -254,6 +265,8 @@ export default function TattooIntake() {
       },
       budget: form.budget,
       availability: form.availability.trim(),
+      bookingLocation: form.bookingLocation,
+      travelDate: form.travelDate,
       submittedAt: new Date().toISOString(),
     }
 
@@ -274,6 +287,7 @@ export default function TattooIntake() {
     form.firstName || form.lastName
       ? `${form.firstName} ${form.lastName}`.trim()
       : 'Not set'
+  const locationName = form.bookingLocation || 'Not set'
 
   return (
     <main className="grid min-h-screen bg-[#f7f0e8] lg:grid-cols-[minmax(300px,410px)_minmax(0,1fr)]">
@@ -308,10 +322,13 @@ export default function TattooIntake() {
           </svg>
         </a>
         <h4 className="m-0 mt-2 max-w-[11ch] text-[clamp(2.45rem,6vw,2.65rem)] leading-[0.96] font-bold text-[#f3b29b] ">
-          Nilab Tattoos
+          Nila B
           <br /> 
-          Custom Tattoo Request
+          Request Form
         </h4>
+        <p className="mt-5 max-w-[30ch] text-sm leading-relaxed text-[#fffaf5]/78">
+          {settings.requestFormMessage}
+        </p>
 
         <div
           className="mt-8.5 border-t border-white/15 pt-7"
@@ -324,7 +341,7 @@ export default function TattooIntake() {
           <div
             className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/15"
             role="progressbar"
-            aria-label="Quote readiness"
+            aria-label="Request readiness"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={completion}
@@ -338,11 +355,12 @@ export default function TattooIntake() {
 
         <div className="mt-8.5 hidden border-t border-white/15 pt-7 lg:block">
           <h2 className="mb-4.5 text-base font-bold text-[#fffaf5]">
-            Quote snapshot
+            Request snapshot
           </h2>
           <dl className="grid gap-3.5">
             {[
-              { label: 'Client', value: clientName },
+              { label: 'Name', value: clientName },
+              { label: 'Booking location', value: locationName },
               {
                 label: 'Size',
                 value:
@@ -373,7 +391,7 @@ export default function TattooIntake() {
           <div className={stepHeaderClass}>
             <p className={stepNumberClass}>01</p>
             <h2 className={stepTitleClass} id="contact-heading">
-              Client
+              Your Information
             </h2>
           </div>
 
@@ -419,18 +437,71 @@ export default function TattooIntake() {
               />
             </label>
           </div>
+
+          <div className="grid gap-4.5 md:grid-cols-2">
+            <label className={labelClass}>
+              <FieldText required>City hoping to book in</FieldText>
+              <select
+                className={inputClass}
+                required
+                value={form.bookingLocation}
+                onChange={(event) => {
+                  updateField('bookingLocation', event.target.value)
+                  updateField('travelDate', '')
+                }}
+              >
+                <option value="">Select city</option>
+                {settings.bookingLocations.map((location: BookingLocation) => (
+                  <option key={location.city} value={location.city}>
+                    {location.city}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className={labelClass}>
+              <FieldText>Artist travel date</FieldText>
+              <select
+                className={inputClass}
+                value={form.travelDate}
+                onChange={(event) => updateField('travelDate', event.target.value)}
+                disabled={!selectedBookingLocation?.travelDates.length}
+              >
+                <option value="">
+                  {selectedBookingLocation?.travelDates.length
+                    ? 'Select travel date'
+                    : 'No dates listed yet'}
+                </option>
+                {selectedBookingLocation?.travelDates.map((date) => (
+                  <option key={date} value={date}>
+                    {date}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <label className={labelClass}>
+            <FieldText>Availability or timing notes</FieldText>
+            <textarea
+              className={textareaClass}
+              rows={3}
+              value={form.availability}
+              onChange={(event) => updateField('availability', event.target.value)}
+              placeholder="Preferred days, deadlines, travel windows, or how soon you want to start..."
+            />
+          </label>
         </section>
 
         <section className={sectionClass} aria-labelledby="tattoo-heading">
           <div className={stepHeaderClass}>
             <p className={stepNumberClass}>02</p>
             <h2 className={stepTitleClass} id="tattoo-heading">
-              Tattoo
+              Description
             </h2>
           </div>
 
           <label className={labelClass}>
-            <FieldText required>Description of the tattoo</FieldText>
+            <FieldText required>Description</FieldText>
             <textarea
               className={textareaClass}
               required
@@ -439,7 +510,7 @@ export default function TattooIntake() {
               onChange={(event) =>
                 updateField('tattooDescription', event.target.value)
               }
-              placeholder="Subject matter, symbols, text, mood, must-have details..."
+              placeholder="Please type exact text here for any script or attach photo if in a different langauge or specific handwriting"
             />
           </label>
 
@@ -527,15 +598,6 @@ export default function TattooIntake() {
               placeholder="Exact area, side of body, open to artist recommendation, wraps around, near existing tattoos..."
             />
           </label>
-        </section>
-
-        <section className={sectionClass} aria-labelledby="style-heading">
-          <div className={stepHeaderClass}>
-            <p className={stepNumberClass}>03</p>
-            <h2 className={stepTitleClass} id="style-heading">
-              Look
-            </h2>
-          </div>
 
           <fieldset className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             <legend className="col-span-full mb-0 text-sm font-bold text-[#5a4d46]">
@@ -556,16 +618,13 @@ export default function TattooIntake() {
           </fieldset>
 
           <label className={labelClass}>
-            <FieldText>Style preferences</FieldText>
-            <select
+            <FieldText>Style Preference</FieldText>
+            <input
               className={inputClass}
               value={form.style}
               onChange={(event) => updateField('style', event.target.value)}
-            >
-              {tattooStyles.map((style) => (
-                <option key={style}>{style}</option>
-              ))}
-            </select>
+              placeholder="Fineline, realism, script, ornamental, not sure yet..."
+            />
           </label>
 
           <fieldset className="grid gap-2 sm:grid-cols-3">
@@ -602,7 +661,7 @@ export default function TattooIntake() {
 
         <section className={sectionClass} aria-labelledby="photos-heading">
           <div className={stepHeaderClass}>
-            <p className={stepNumberClass}>04</p>
+            <p className={stepNumberClass}>03</p>
             <h2 className={stepTitleClass} id="photos-heading">
               Photos
             </h2>
@@ -641,21 +700,11 @@ export default function TattooIntake() {
             </label>
           </div>
 
-          <label className={labelClass}>
-            <FieldText>Availability or timing notes</FieldText>
-            <textarea
-              className={textareaClass}
-              rows={3}
-              value={form.availability}
-              onChange={(event) => updateField('availability', event.target.value)}
-              placeholder="Preferred days, travel dates, deadline, how soon you want to start..."
-            />
-          </label>
         </section>
 
         <section
           className="flex w-full max-w-[940px] flex-col items-stretch justify-between gap-5 sm:flex-row sm:items-center"
-          aria-label="Submit tattoo quote intake"
+          aria-label="Submit request form"
         >
           <label className="flex cursor-pointer items-center gap-2.5 font-semibold text-[#5a4d46]">
             <input
@@ -668,14 +717,14 @@ export default function TattooIntake() {
               className="grid size-[20px] shrink-0 place-items-center rounded border border-[#c9beb1] bg-white transition after:hidden after:size-2 after:rounded-[2px] after:bg-white after:content-[''] peer-checked:border-[#8f4536] peer-checked:bg-[#8f4536] peer-checked:after:block peer-focus-visible:ring-3 peer-focus-visible:ring-[#8f4536]/25 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#f7f0e8]"
               aria-hidden="true"
             />
-            <span>I agree to be contacted about this quote request.</span>
+            <span>I agree to be contacted about this request.</span>
           </label>
           <button
             className="min-h-[46px] rounded-lg bg-[#8f4536] px-5 font-bold text-white transition hover:-translate-y-px hover:bg-[#723429] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-[#b49b90] disabled:text-white/70 sm:w-auto"
             type="submit"
             disabled={!form.consent || submitted}
           >
-            {submitted ? 'Request sent' : 'Request quote'}
+            {submitted ? 'Request sent' : 'Send request'}
           </button>
         </section>
 
@@ -685,7 +734,7 @@ export default function TattooIntake() {
             role="status"
           >
             Request {formatRequestId(submittedRequestId)} submitted. This has
-            the core details needed to quote cost, timeline, and session count.
+            the core details needed to review cost, timeline, and session count.
           </p>
         )}
       </form>

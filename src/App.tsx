@@ -9,14 +9,18 @@ function getRoute(): Route {
     return 'admin'
   }
 
-  return window.location.hash === '#tattoo-intake' ? 'intake' : 'home'
+  return window.location.hash === '#request-form' ||
+    window.location.hash === '#tattoo-intake'
+    ? 'intake'
+    : 'home'
 }
 
 function Homepage() {
   const [authPanel, setAuthPanel] = useState<'signin' | 'signup' | null>(null)
 
   const openPrototype = () => {
-    window.location.hash = 'tattoo-intake'
+    window.history.pushState(null, '', '#request-form')
+    window.dispatchEvent(new PopStateEvent('popstate'))
   }
 
   return (
@@ -81,7 +85,7 @@ function Homepage() {
           </h2>
           <p className="m-0 text-sm font-semibold text-[#5a4d46]">
             This prototype does not authenticate yet. Use Dashboard for the
-            Nilab Tattoos artist view, or open the intake form as a client.
+            Nila B artist view, or open the request form.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             <a
@@ -95,7 +99,7 @@ function Homepage() {
               type="button"
               onClick={openPrototype}
             >
-              Client intake
+              Request form
             </button>
           </div>
         </section>
@@ -104,14 +108,14 @@ function Homepage() {
         <div className="mx-auto grid w-full max-w-[720px] gap-7 lg:mx-0">
           <div className="grid gap-4">
             <p className="m-0 text-xs font-bold tracking-[0.12em] text-[#8f4536] uppercase">
-              Tattoo intake prototype
+              Boink request form prototype
             </p>
             <h1 className="m-0 max-w-[12ch] text-[3rem] leading-[0.98] font-bold sm:text-[4.6rem] lg:text-[5.5rem]">
-              Welcome to Safi Inc.
+              Welcome to Boink.
             </h1>
             <p className="m-0 max-w-[620px] text-lg leading-relaxed text-[#5a4d46]">
-              Start the prototype to collect client details, tattoo sizing,
-              placement, style preferences, references, and Inbox
+              Start the prototype to collect request details, booking location,
+              availability, references, and Inbox.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -120,10 +124,10 @@ function Homepage() {
               type="button"
               onClick={openPrototype}
             >
-              Open tattoo intake form
+              Open request form
             </button>
             <span className="text-sm font-semibold text-[#7a6a60]">
-              Prototype route: #tattoo-intake
+              Prototype route: #request-form
             </span>
           </div>
         </div>

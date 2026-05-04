@@ -1,8 +1,9 @@
 import seedTattooRequests from './tattooRequests.json'
 
-const STORAGE_KEY = 'nilab-tattoo-requests'
-const STORE_EVENT = 'nilab-request-store-change'
-const STORE_VERSION = 4
+const STORAGE_KEY = 'boink-tattoo-requests'
+const LEGACY_STORAGE_KEY = 'nilab-tattoo-requests'
+const STORE_EVENT = 'boink-request-store-change'
+const STORE_VERSION = 5
 const ARTIST_ID = 'artist_001'
 const ARTIST_EMAIL = 'artist@studio.test'
 
@@ -83,6 +84,8 @@ export type TattooRequest = {
     referencePhotos: TattooRequestPhoto[]
     bodyPhotos: TattooRequestPhoto[]
   }
+  bookingLocation: string
+  travelDate: string
   budget: string
   availability: string
   status: TattooRequestStatus
@@ -100,6 +103,8 @@ export type NewTattooRequestInput = {
   client: TattooRequest['client']
   tattoo: TattooRequest['tattoo']
   photos?: TattooRequest['photos']
+  bookingLocation?: string
+  travelDate?: string
   budget: string
   availability: string
   submittedAt?: string
@@ -329,6 +334,8 @@ function normalizeRequest(value: unknown): TattooRequest | null {
         ? normalizePhotos(value.photos.bodyPhotos)
         : [],
     },
+    bookingLocation: asString(value.bookingLocation),
+    travelDate: asString(value.travelDate),
     budget: asString(value.budget),
     availability: asString(value.availability),
     status,
@@ -366,7 +373,9 @@ function readStoredRequests() {
     return null
   }
 
-  const storedValue = window.localStorage.getItem(STORAGE_KEY)
+  const storedValue =
+    window.localStorage.getItem(STORAGE_KEY) ??
+    window.localStorage.getItem(LEGACY_STORAGE_KEY)
 
   if (!storedValue) {
     return null
@@ -440,6 +449,8 @@ export function appendTattooRequest(input: NewTattooRequestInput) {
     client: input.client,
     tattoo: input.tattoo,
     photos: input.photos ?? { referencePhotos: [], bodyPhotos: [] },
+    bookingLocation: input.bookingLocation ?? '',
+    travelDate: input.travelDate ?? '',
     budget: input.budget,
     availability: input.availability,
     status: 'new',
@@ -462,6 +473,8 @@ export function addTattooRequest(request: NewTattooRequestInput | TattooRequest)
     client: request.client,
     tattoo: request.tattoo,
     photos: request.photos,
+    bookingLocation: request.bookingLocation,
+    travelDate: request.travelDate,
     budget: request.budget,
     availability: request.availability,
     submittedAt: request.submittedAt,

@@ -59,6 +59,9 @@ export type BookingForm = {
 export type TemplateForm = {
   quoteTemplates: string
   sessionTemplates: string
+  requestFormMessage: string
+  bookingLocations: string
+  travelDates: string
 }
 
 /** Derived sidebar filter data with the current count for each folder. */

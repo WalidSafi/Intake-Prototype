@@ -1,7 +1,5 @@
-import type { FormEventHandler } from 'react'
 import DashboardFolderNav from './DashboardFolderNav'
-import DashboardSettingsPanel from './DashboardSettingsPanel'
-import type { DashboardFilter, FolderKey, TemplateForm } from './dashboardTypes'
+import type { DashboardFilter, FolderKey } from './dashboardTypes'
 
 type DashboardSidebarArtist = {
   name: string
@@ -13,39 +11,26 @@ type DashboardSidebarArtist = {
 type DashboardSidebarProps = {
   activeFilter: FolderKey
   artist?: DashboardSidebarArtist
-  compactTextareaClass: string
   filters: DashboardFilter[]
   isDark: boolean
   mutedTextClass: string
   onEmptyDeleted: () => void
+  onOpenSettings: () => void
   onSelectFilter: (filter: FolderKey) => void
-  onSubmitSettings: FormEventHandler<HTMLFormElement>
-  onTemplateFieldChange: <Field extends keyof TemplateForm>(
-    field: Field,
-    value: TemplateForm[Field],
-  ) => void
-  onToggleSettings: () => void
   panelClass: string
-  showSettings: boolean
-  templateForm: TemplateForm
 }
 
-/** Sidebar navigation, identity, and template settings for the admin dashboard. */
+/** Sidebar navigation and artist identity for the admin dashboard. */
 export default function DashboardSidebar({
   activeFilter,
   artist,
-  compactTextareaClass,
   filters,
   isDark,
   mutedTextClass,
   onEmptyDeleted,
+  onOpenSettings,
   onSelectFilter,
-  onSubmitSettings,
-  onTemplateFieldChange,
-  onToggleSettings,
   panelClass,
-  showSettings,
-  templateForm,
 }: DashboardSidebarProps) {
   return (
     <aside
@@ -77,13 +62,9 @@ export default function DashboardSidebar({
             </svg>
           </a>
           <button
-            className={`grid size-10 place-items-center rounded-lg border transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 ${
-              showSettings
-                ? 'border-[#b95f43] bg-[#8f4536] text-white'
-                : `${panelClass} ${mutedTextClass}`
-            }`}
+            className={`grid size-10 place-items-center rounded-lg border transition hover:-translate-y-px focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 ${panelClass} ${mutedTextClass}`}
             type="button"
-            onClick={onToggleSettings}
+            onClick={onOpenSettings}
             aria-label="Open settings"
             title="Settings"
           >
@@ -138,17 +119,6 @@ export default function DashboardSidebar({
           </h1>
         </div>
       </div>
-
-      {showSettings && (
-        <DashboardSettingsPanel
-          compactTextareaClass={compactTextareaClass}
-          mutedTextClass={mutedTextClass}
-          onSubmit={onSubmitSettings}
-          onTemplateFieldChange={onTemplateFieldChange}
-          panelClass={panelClass}
-          templateForm={templateForm}
-        />
-      )}
 
       {/* Folders wrap into compact columns on mobile/tablet. */}
       <DashboardFolderNav

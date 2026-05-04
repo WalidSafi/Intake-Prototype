@@ -60,6 +60,7 @@ import DashboardQuotePanel from './dashboard/DashboardQuotePanel'
 import DashboardRequestDetails from './dashboard/DashboardRequestDetails'
 import DashboardRequestHeader from './dashboard/DashboardRequestHeader'
 import DashboardRequestList from './dashboard/DashboardRequestList'
+import DashboardSettingsView from './dashboard/DashboardSettingsView'
 import DashboardSidebar from './dashboard/DashboardSidebar'
 
 type HeaderIconButtonProps = {
@@ -313,7 +314,7 @@ export default function AdminDashboard() {
     const nextTemplates = saveAdminTemplates(getTemplatesFromTemplateForm(templateForm))
     setTemplates(nextTemplates)
     setTemplateForm(getTemplateFormFromTemplates(nextTemplates))
-    setStatusMessage('Template settings saved.')
+    setStatusMessage('Settings saved.')
   }
 
   const updateTemplateForm = <Field extends keyof TemplateForm>(
@@ -547,24 +548,38 @@ export default function AdminDashboard() {
       ? 'border-[#3c332e] text-[#fffaf5] placeholder:text-[#8f8178]'
       : 'border-[#c9beb1] text-[#201b18] placeholder:text-[#9a8b81]'
   }`
+
+  if (showSettings) {
+    return (
+      <main className={shellClass}>
+        <DashboardSettingsView
+          compactTextareaClass={compactTextareaClass}
+          isDark={isDark}
+          mutedTextClass={mutedTextClass}
+          onBack={() => setShowSettings(false)}
+          onSubmit={saveTemplateSettings}
+          onTemplateFieldChange={updateTemplateForm}
+          panelClass={panelClass}
+          statusMessage={statusMessage}
+          templateForm={templateForm}
+        />
+      </main>
+    )
+  }
+
   return (
     <main className={shellClass}>
       <div className="grid min-h-screen xl:grid-cols-[260px_minmax(0,1fr)]">
         <DashboardSidebar
           activeFilter={filter}
           artist={artist}
-          compactTextareaClass={compactTextareaClass}
           filters={filters}
           isDark={isDark}
           mutedTextClass={mutedTextClass}
           onEmptyDeleted={emptyDeletedFolder}
+          onOpenSettings={() => setShowSettings(true)}
           onSelectFilter={setFilter}
-          onSubmitSettings={saveTemplateSettings}
-          onTemplateFieldChange={updateTemplateForm}
-          onToggleSettings={() => setShowSettings((current) => !current)}
           panelClass={panelClass}
-          showSettings={showSettings}
-          templateForm={templateForm}
         />
 
         <section className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)] overflow-hidden">
