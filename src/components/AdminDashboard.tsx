@@ -56,7 +56,9 @@ import DashboardBookingForm from './dashboard/DashboardBookingForm'
 import DashboardCalendarPanel from './dashboard/DashboardCalendarPanel'
 import DashboardCompletionForm from './dashboard/DashboardCompletionForm'
 import DashboardDepositForm from './dashboard/DashboardDepositForm'
-import DashboardQuotePanel from './dashboard/DashboardQuotePanel'
+import DashboardQuotePanel, {
+  type QuoteMode,
+} from './dashboard/DashboardQuotePanel'
 import DashboardRequestDetails from './dashboard/DashboardRequestDetails'
 import DashboardRequestHeader from './dashboard/DashboardRequestHeader'
 import DashboardRequestList from './dashboard/DashboardRequestList'
@@ -113,7 +115,11 @@ export default function AdminDashboard({
   const [templateForm, setTemplateForm] = useState<TemplateForm>(() =>
     getTemplateFormFromTemplates(getAdminTemplates()),
   )
+  const [quoteMode, setQuoteMode] = useState<QuoteMode>('template')
   const [selectedQuoteTemplate, setSelectedQuoteTemplate] = useState('')
+  const [customQuoteCurrency, setCustomQuoteCurrency] = useState('CAD')
+  const [customQuotePrice, setCustomQuotePrice] = useState('')
+  const [customQuote, setCustomQuote] = useState('')
   const [depositRequestId, setDepositRequestId] = useState<string | null>(null)
   const [depositForm, setDepositForm] = useState<DepositForm>(initialDepositForm)
   const [bookingRequestId, setBookingRequestId] = useState<string | null>(null)
@@ -299,8 +305,19 @@ export default function AdminDashboard({
     setStatusMessage(`Deposit confirmed. ${formatRequestId(selectedRequest.id)} is ready to book.`)
   }
 
-  const markQuotedWithTemplate = () => {
-    if (!selectedRequest || !selectedQuoteTemplate) {
+  const markQuoted = () => {
+    const customQuotePriceLabel = customQuotePrice.trim()
+      ? `${customQuoteCurrency} ${customQuotePrice.trim()}`
+      : ''
+    const quoteNotes =
+      quoteMode === 'template'
+        ? selectedQuoteTemplate
+        : [
+            customQuotePriceLabel,
+            customQuote.trim(),
+          ].filter(Boolean).join(' | ')
+
+    if (!selectedRequest || !quoteNotes) {
       return
     }
 
@@ -309,9 +326,11 @@ export default function AdminDashboard({
       bookkeeping: null,
       auditEvent: createAuditEvent(selectedRequest.id, {
         type: 'status_changed',
-        label: 'Quote template applied',
+        label: quoteMode === 'template'
+          ? 'Quote template applied'
+          : 'Custom quote sent',
         date: new Date().toISOString().slice(0, 10),
-        notes: selectedQuoteTemplate,
+        notes: quoteNotes,
       }),
     })
     setFilter('quoted')
@@ -826,10 +845,19 @@ export default function AdminDashboard({
                   {selectedRequest.status !== 'archived' && (
                     <DashboardQuotePanel
                       compactInputClass={compactInputClass}
+                      compactTextareaClass={compactTextareaClass}
+                      customQuote={customQuote}
+                      customQuoteCurrency={customQuoteCurrency}
+                      customQuotePrice={customQuotePrice}
                       isDark={isDark}
                       mutedTextClass={mutedTextClass}
-                      onMarkQuoted={markQuotedWithTemplate}
+                      onCustomQuoteChange={setCustomQuote}
+                      onCustomQuoteCurrencyChange={setCustomQuoteCurrency}
+                      onCustomQuotePriceChange={setCustomQuotePrice}
+                      onMarkQuoted={markQuoted}
+                      onQuoteModeChange={setQuoteMode}
                       onSelectedTemplateChange={setSelectedQuoteTemplate}
+                      quoteMode={quoteMode}
                       selectedTemplate={selectedQuoteTemplate}
                       templates={templates}
                     />

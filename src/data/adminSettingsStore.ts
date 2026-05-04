@@ -15,11 +15,7 @@ export type BookingLocation = {
 }
 
 const defaultTemplates: AdminTemplates = {
-  quoteTemplates: [
-    'Small tattoo quote: design prep, stencil, and one tattoo session.',
-    'Custom piece quote: design time, tattoo session, and one optional touch-up review.',
-    'Large project quote: staged design approval with multiple tattoo sessions.',
-  ],
+  quoteTemplates: [],
   requestFormMessage:
     'Share as much detail as you can so I can understand the piece, timing, and best city for booking.',
   defaultLocation: '',
@@ -30,17 +26,58 @@ function canUseLocalStorage() {
   return typeof window !== 'undefined' && 'localStorage' in window
 }
 
-function normalizeTemplateList(value: unknown, fallback: string[]) {
+function addKnownQuotePrice(value: string) {
+  const quote = value.trim()
+
+  if (quote.includes('|')) {
+    const [priceValue, ...textValues] = quote.split('|')
+    const price = priceValue.trim()
+
+    return price.startsWith('$')
+      ? `CAD ${price} | ${textValues.join('|').trim()}`
+      : quote
+  }
+
+  if (quote === 'Small tattoo quote: design prep, stencil, and one tattoo session.') {
+    return 'CAD $250 - $450 | Small tattoo quote: design prep, stencil, and one tattoo session.'
+  }
+
+  if (
+    quote ===
+    'Custom piece quote: design time, tattoo session, and one optional touch-up review.'
+  ) {
+    return 'CAD $650 - $950 | Custom piece quote: design time, tattoo session, and one optional touch-up review.'
+  }
+
+  if (
+    quote ===
+    'Large project quote: staged design approval with multiple tattoo sessions.'
+  ) {
+    return 'CAD $1,500+ | Large project quote: staged design approval with multiple tattoo sessions.'
+  }
+
+  if (quote.startsWith('$')) {
+    return `CAD ${quote}`
+  }
+
+  return quote
+}
+
+function normalizeTemplateList(
+  value: unknown,
+  fallback: string[],
+  allowEmpty = false,
+) {
   if (!Array.isArray(value)) {
     return fallback
   }
 
   const normalized = value
     .filter((item): item is string => typeof item === 'string')
-    .map((item) => item.trim())
+    .map(addKnownQuotePrice)
     .filter(Boolean)
 
-  return normalized.length ? normalized : fallback
+  return normalized.length || allowEmpty ? normalized : fallback
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -102,6 +139,7 @@ export function getAdminTemplates(): AdminTemplates {
       quoteTemplates: normalizeTemplateList(
         parsedValue.quoteTemplates,
         defaultTemplates.quoteTemplates,
+        true,
       ),
       requestFormMessage:
         normalizeTextValue(
@@ -127,6 +165,7 @@ export function saveAdminTemplates(templates: AdminTemplates) {
     quoteTemplates: normalizeTemplateList(
       templates.quoteTemplates,
       defaultTemplates.quoteTemplates,
+      true,
     ),
     requestFormMessage:
       templates.requestFormMessage.trim() || defaultTemplates.requestFormMessage,

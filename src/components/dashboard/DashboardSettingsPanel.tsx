@@ -7,6 +7,7 @@ type EditableLocation = {
 }
 
 type EditableQuoteTemplate = {
+  currency: string
   price: string
   text: string
 }
@@ -32,6 +33,8 @@ const primaryButtonClass =
 
 const iconButtonClass =
   'grid size-8 shrink-0 place-items-center rounded-lg text-[#8f4536] transition hover:-translate-y-px hover:bg-[#b95f43]/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#b95f43]/25 disabled:cursor-not-allowed disabled:opacity-40'
+
+const currencyOptions = ['CAD', 'USD', 'EUR', 'GBP', 'JPY', 'AUD']
 
 function TrashIcon() {
   return (
@@ -110,6 +113,7 @@ function formatLocations(locations: EditableLocation[]) {
 }
 
 function getEditableQuoteTemplates(value: string): EditableQuoteTemplate[] {
+  const currencyPattern = new RegExp(`^(${currencyOptions.join('|')})\\s+(.+)$`)
   const templates = value
     .split('\n')
     .map((row) => row.trim())
@@ -118,18 +122,26 @@ function getEditableQuoteTemplates(value: string): EditableQuoteTemplate[] {
       const [firstValue, ...restValues] = row.split('|')
       const maybePrice = firstValue.trim()
       const text = restValues.join('|').trim()
+      const currencyMatch = maybePrice.match(currencyPattern)
 
-      return text
-        ? { price: maybePrice, text }
-        : { price: '', text: maybePrice }
+      if (!text) {
+        return { currency: 'CAD', price: '', text: maybePrice }
+      }
+
+      return {
+        currency: currencyMatch?.[1] ?? 'CAD',
+        price: currencyMatch?.[2] ?? maybePrice,
+        text,
+      }
     })
 
-  return templates.length ? templates : [{ price: '', text: '' }]
+  return templates
 }
 
 function formatQuoteTemplates(templates: EditableQuoteTemplate[]) {
   return templates
     .map((template) => {
+      const currency = template.currency.trim()
       const price = template.price.trim()
       const text = template.text.trim()
 
@@ -137,7 +149,7 @@ function formatQuoteTemplates(templates: EditableQuoteTemplate[]) {
         return text
       }
 
-      return `${price} | ${text}`
+      return `${currency} ${price} | ${text}`
     })
     .filter(Boolean)
     .join('\n')
@@ -336,7 +348,10 @@ export default function DashboardSettingsPanel({
             className={outlineButtonClass}
             type="button"
             onClick={() =>
-              updateQuoteTemplates([...quoteTemplates, { price: '', text: '' }])
+              updateQuoteTemplates([
+                ...quoteTemplates,
+                { currency: 'CAD', price: '', text: '' },
+              ])
             }
           >
             Add quote template
@@ -347,9 +362,28 @@ export default function DashboardSettingsPanel({
           {quoteTemplates.map((template, templateIndex) => (
             <div
               className="grid gap-3 rounded-lg bg-[#b95f43]/[0.06] p-3 sm:p-4"
-              key={`${template.price}-${template.text}-${templateIndex}`}
+              key={`quote-template-${templateIndex}`}
             >
-              <div className="grid gap-3 sm:grid-cols-[180px_minmax(0,1fr)_auto] sm:items-end">
+              <div className="grid gap-3 sm:grid-cols-[96px_150px_minmax(0,1fr)_auto] sm:items-end">
+                <label className="grid gap-1 text-xs font-bold uppercase">
+                  Currency
+                  <select
+                    className={compactInputClass}
+                    value={template.currency}
+                    onChange={(event) => {
+                      const nextTemplates = [...quoteTemplates]
+                      nextTemplates[templateIndex] = {
+                        ...template,
+                        currency: event.target.value,
+                      }
+                      updateQuoteTemplates(nextTemplates)
+                    }}
+                  >
+                    {currencyOptions.map((currency) => (
+                      <option key={currency}>{currency}</option>
+                    ))}
+                  </select>
+                </label>
                 <label className="grid gap-1 text-xs font-bold uppercase">
                   Price
                   <input
@@ -383,19 +417,19 @@ export default function DashboardSettingsPanel({
                     placeholder="Design prep, stencil, and one tattoo session."
                   />
                 </label>
-                {quoteTemplates.length > 1 && (
-                  <button
-                    className={outlineButtonClass}
-                    type="button"
-                    onClick={() =>
-                      updateQuoteTemplates(
-                        quoteTemplates.filter((_, index) => index !== templateIndex),
-                      )
-                    }
-                  >
-                    Remove
-                  </button>
-                )}
+                <button
+                  className={`${iconButtonClass} self-end`}
+                  type="button"
+                  aria-label="Remove quote template"
+                  title="Remove quote template"
+                  onClick={() =>
+                    updateQuoteTemplates(
+                      quoteTemplates.filter((_, index) => index !== templateIndex),
+                    )
+                  }
+                >
+                  <TrashIcon />
+                </button>
               </div>
             </div>
           ))}
