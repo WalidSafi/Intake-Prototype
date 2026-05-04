@@ -58,8 +58,8 @@ export type BookingForm = {
 /** Settings form state mirrors saved templates as newline-delimited text. */
 export type TemplateForm = {
   quoteTemplates: string
-  sessionTemplates: string
   requestFormMessage: string
+  defaultLocation: string
   bookingLocations: string
   travelDates: string
 }

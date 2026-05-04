@@ -726,5 +726,137 @@
     "status": "completed",
     "submittedAt": "2026-02-20T13:50:00-05:00",
     "completedAt": "2026-04-05T17:10:00-04:00"
+  },
+  {
+    "id": "req_2026_0017",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Nadia",
+      "lastName": "Walsh",
+      "email": "nadia.walsh@example.test",
+      "phone": "+1 416-555-0128"
+    },
+    "tattoo": {
+      "description": "Fine line olive branch wrapping gently around the collarbone with tiny dot accents.",
+      "size": {
+        "width": 6,
+        "height": 2,
+        "unit": "in"
+      },
+      "placement": "Chest",
+      "placementNotes": "Left collarbone, light curve following the bone.",
+      "colorMode": "Black and grey",
+      "style": "Fineline botanical",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0021",
+          "label": "olive branch placement reference",
+          "url": "/prototype-uploads/nadia-olive-branch.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0015",
+          "label": "left collarbone placement",
+          "url": "/prototype-uploads/nadia-left-collarbone.jpg"
+        }
+      ]
+    },
+    "bookingLocation": "Toronto",
+    "travelDate": "",
+    "budget": "$500 - $1,000",
+    "availability": "Booked after deposit. Prefers a quiet morning appointment.",
+    "status": "booked",
+    "submittedAt": "2026-04-22T10:11:00-04:00",
+    "appointment": {
+      "date": "2026-05-12",
+      "startTime": "10:30",
+      "durationMinutes": 150,
+      "service": "Tattoo session",
+      "depositReceived": true,
+      "notes": "Prep fine-line needles and stencil at 6 inches.",
+      "bookedAt": "2026-05-02T14:20:00-04:00"
+    },
+    "auditTrail": [
+      {
+        "id": "audit_req_2026_0017_booked",
+        "type": "status_changed",
+        "label": "Session booked",
+        "date": "2026-05-12",
+        "notes": "Tattoo session at 10:30",
+        "createdAt": "2026-05-02T14:20:00-04:00"
+      }
+    ]
+  },
+  {
+    "id": "req_2026_0018",
+    "artistId": "artist_001",
+    "artistEmail": "artist@studio.test",
+    "client": {
+      "firstName": "Theo",
+      "lastName": "Grant",
+      "email": "theo.grant@example.test",
+      "phone": "+1 647-555-0194"
+    },
+    "tattoo": {
+      "description": "Blackwork moth sternum piece with ornamental wing patterning and soft dotwork fade.",
+      "size": {
+        "width": 7,
+        "height": 8,
+        "unit": "in"
+      },
+      "placement": "Chest",
+      "placementNotes": "Centered sternum, symmetrical with room below the collarbone.",
+      "colorMode": "Blackwork",
+      "style": "Ornamental blackwork",
+      "isCoverup": "No",
+      "coverupNotes": ""
+    },
+    "photos": {
+      "referencePhotos": [
+        {
+          "id": "photo_ref_0022",
+          "label": "ornamental moth wing reference",
+          "url": "/prototype-uploads/theo-moth-wing.jpg"
+        }
+      ],
+      "bodyPhotos": [
+        {
+          "id": "photo_body_0016",
+          "label": "sternum placement",
+          "url": "/prototype-uploads/theo-sternum-placement.jpg"
+        }
+      ]
+    },
+    "bookingLocation": "Montreal",
+    "travelDate": "2026-05-20",
+    "budget": "$1,000 - $2,000",
+    "availability": "Booked during Montreal travel dates.",
+    "status": "booked",
+    "submittedAt": "2026-04-21T15:35:00-04:00",
+    "appointment": {
+      "date": "2026-05-20",
+      "startTime": "13:00",
+      "durationMinutes": 240,
+      "service": "Tattoo session",
+      "depositReceived": true,
+      "notes": "Travel booking. Confirm stencil placement before setup.",
+      "bookedAt": "2026-05-01T16:45:00-04:00"
+    },
+    "auditTrail": [
+      {
+        "id": "audit_req_2026_0018_booked",
+        "type": "status_changed",
+        "label": "Session booked",
+        "date": "2026-05-20",
+        "notes": "Tattoo session at 13:00",
+        "createdAt": "2026-05-01T16:45:00-04:00"
+      }
+    ]
   }
 ]

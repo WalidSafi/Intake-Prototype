@@ -3,7 +3,7 @@ import seedTattooRequests from './tattooRequests.json'
 const STORAGE_KEY = 'boink-tattoo-requests'
 const LEGACY_STORAGE_KEY = 'nilab-tattoo-requests'
 const STORE_EVENT = 'boink-request-store-change'
-const STORE_VERSION = 5
+const STORE_VERSION = 6
 const ARTIST_ID = 'artist_001'
 const ARTIST_EMAIL = 'artist@studio.test'
 
@@ -12,6 +12,7 @@ export type TattooRequestStatus =
   | 'needs_review'
   | 'quoted'
   | 'approved_for_booking'
+  | 'booked'
   | 'completed'
   | 'archived'
 
@@ -128,6 +129,7 @@ const statuses: TattooRequestStatus[] = [
   'needs_review',
   'quoted',
   'approved_for_booking',
+  'booked',
   'completed',
   'archived',
 ]
@@ -368,6 +370,17 @@ function getSeedRequests() {
   return normalizeRequests(seedTattooRequests)
 }
 
+function mergeMissingSeedRequests(requests: TattooRequest[]) {
+  const requestIds = new Set(requests.map((request) => request.id))
+  const missingSeedRequests = getSeedRequests().filter(
+    (request) => !requestIds.has(request.id),
+  )
+
+  return missingSeedRequests.length
+    ? [...requests, ...missingSeedRequests]
+    : requests
+}
+
 function readStoredRequests() {
   if (!canUseLocalStorage()) {
     return null
@@ -388,6 +401,16 @@ function readStoredRequests() {
         ? parsedValue.requests
         : parsedValue
     const requests = normalizeRequests(requestSource)
+    const storedVersion = isRecord(parsedValue)
+      ? Number(parsedValue.version)
+      : 0
+
+    if (requests.length && storedVersion < STORE_VERSION) {
+      const migratedRequests = mergeMissingSeedRequests(requests)
+      writeStoredRequests(migratedRequests)
+
+      return migratedRequests
+    }
 
     return requests.length ? requests : null
   } catch {

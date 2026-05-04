@@ -121,6 +121,19 @@ Expected result:
 1 passed
 ```
 
+## Production Routing
+
+The frontend uses `BrowserRouter`, so production static hosting must serve
+`index.html` for deep links such as `/request`, `/admin`, and
+`/admin/settings`.
+
+The production frontend is configured for a root base URL (`/`). GitHub Pages
+is configured in `.github/workflows/deploy.yml`; the deploy job copies
+`dist/index.html` to `dist/404.html` so deep links fall back to the SPA. Other
+hosts need their equivalent rewrite rule, for example: Netlify `_redirects`,
+Vercel `rewrites`, Firebase `rewrites`, or Azure Static Web Apps
+`navigationFallback`.
+
 ## Common Dev Setup
 
 Use two terminals.

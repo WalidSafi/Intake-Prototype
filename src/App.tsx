@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react'
+import {
+  BrowserRouter,
+  Link,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import AdminDashboard from './components/AdminDashboard'
 import TattooIntake from './components/TattooIntake'
 
-type Route = 'home' | 'intake' | 'admin'
-
-function getRoute(): Route {
-  if (window.location.hash === '#admin-panel') {
-    return 'admin'
-  }
-
-  return window.location.hash === '#request-form' ||
-    window.location.hash === '#tattoo-intake'
-    ? 'intake'
-    : 'home'
-}
-
 function Homepage() {
   const [authPanel, setAuthPanel] = useState<'signin' | 'signup' | null>(null)
+  const navigate = useNavigate()
 
   const openPrototype = () => {
-    window.history.pushState(null, '', '#request-form')
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    navigate('/request')
   }
 
   return (
@@ -29,9 +25,9 @@ function Homepage() {
         className="fixed left-4 right-4 top-4 z-10 flex items-center justify-between gap-3"
         aria-label="Homepage navigation"
       >
-        <a
+        <Link
           className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-lg border border-[#dbd1c5] bg-white/90 px-4 text-sm font-bold text-[#8f4536] shadow-[0_8px_28px_rgba(43,32,25,0.12)] backdrop-blur transition hover:-translate-y-px hover:bg-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#8f4536]/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f0e8]"
-          href="#admin-panel"
+          to="/admin"
         >
           <svg
             aria-hidden="true"
@@ -49,7 +45,7 @@ function Homepage() {
             <rect height="5" rx="1.5" width="8" x="3" y="16" />
           </svg>
           <span>Dashboard</span>
-        </a>
+        </Link>
 
         <div className="flex items-center gap-2">
           <button
@@ -88,12 +84,12 @@ function Homepage() {
             Nila B artist view, or open the request form.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
-            <a
+            <Link
               className="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-[#8f4536] px-3 text-sm font-bold text-white transition hover:bg-[#723429] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#8f4536]/25"
-              href="#admin-panel"
+              to="/admin"
             >
               Artist dashboard
-            </a>
+            </Link>
             <button
               className="min-h-[40px] rounded-lg border border-[#dbd1c5] px-3 text-sm font-bold text-[#5a4d46] transition hover:bg-[#f7f0e8] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#8f4536]/25"
               type="button"
@@ -127,7 +123,7 @@ function Homepage() {
               Open request form
             </button>
             <span className="text-sm font-semibold text-[#7a6a60]">
-              Prototype route: #request-form
+              Prototype route: /request
             </span>
           </div>
         </div>
@@ -140,25 +136,56 @@ function Homepage() {
   )
 }
 
-function App() {
-  const [route, setRoute] = useState<Route>(getRoute)
+function LegacyHashRedirect() {
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const syncRoute = () => setRoute(getRoute())
-
-    window.addEventListener('hashchange', syncRoute)
-    window.addEventListener('popstate', syncRoute)
-    return () => {
-      window.removeEventListener('hashchange', syncRoute)
-      window.removeEventListener('popstate', syncRoute)
+    if (location.hash === '#admin-panel') {
+      navigate('/admin', { replace: true })
+      return
     }
-  }, [])
 
-  if (route === 'intake') {
-    return <TattooIntake />
-  }
+    if (
+      location.hash === '#request-form' ||
+      location.hash === '#tattoo-intake'
+    ) {
+      navigate('/request', { replace: true })
+    }
+  }, [location.hash, navigate])
 
-  return route === 'admin' ? <AdminDashboard /> : <Homepage />
+  return null
+}
+
+function AdminDashboardRoute({ showSettings = false }: { showSettings?: boolean }) {
+  const navigate = useNavigate()
+
+  return (
+    <AdminDashboard
+      settingsRoute={showSettings}
+      onCloseSettingsRoute={() => navigate('/admin')}
+      onOpenSettingsRoute={() => navigate('/admin/settings')}
+    />
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <LegacyHashRedirect />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/request" element={<TattooIntake />} />
+        <Route path="/tattoo-intake" element={<Navigate to="/request" replace />} />
+        <Route path="/admin" element={<AdminDashboardRoute />} />
+        <Route
+          path="/admin/settings"
+          element={<AdminDashboardRoute showSettings />}
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App

@@ -102,7 +102,9 @@ export default function DashboardRequestHeader({
         )}
         {canAdminister && (
           <div className="grid gap-2 sm:flex sm:flex-wrap xl:justify-end">
-            {request.status !== 'archived' && request.status !== 'completed' && (
+            {request.status !== 'archived' &&
+              request.status !== 'booked' &&
+              request.status !== 'completed' && (
               <button
                 className={`${actionButtonBaseClass} ${
                   isDark
@@ -119,6 +121,7 @@ export default function DashboardRequestHeader({
               <button
                 className={`${actionButtonBaseClass} ${
                   request.status === 'approved_for_booking' ||
+                  request.status === 'booked' ||
                   request.status === 'completed'
                     ? 'border-[#b95f43] bg-[#8f4536] text-white'
                     : isDark

@@ -193,8 +193,8 @@ export function getTemplateFormFromTemplates(
 ): TemplateForm {
   return {
     quoteTemplates: templates.quoteTemplates.join('\n'),
-    sessionTemplates: templates.sessionTemplates.join('\n'),
     requestFormMessage: templates.requestFormMessage,
+    defaultLocation: templates.defaultLocation,
     bookingLocations: templates.bookingLocations
       .map((location) => location.city)
       .join('\n'),
@@ -242,11 +242,8 @@ export function getTemplatesFromTemplateForm(
       .split('\n')
       .map((item) => item.trim())
       .filter(Boolean),
-    sessionTemplates: form.sessionTemplates
-      .split('\n')
-      .map((item) => item.trim())
-      .filter(Boolean),
     requestFormMessage: form.requestFormMessage.trim(),
+    defaultLocation: form.defaultLocation.trim(),
     bookingLocations,
   }
 }
